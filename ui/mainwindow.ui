@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="compile_button">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>500</y>
+      <width>100</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Compile</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>40</y>
+      <width>781</width>
+      <height>451</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="sizeConstraint">
+      <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QPlainTextEdit" name="plainTextEdit">
+       <property name="font">
+        <font>
+         <family>JetBrains Mono</family>
+        </font>
+       </property>
+       <property name="plainText">
+        <string>.global _start
+.text
+_start:
+	mov r7, #0x04  ; write
+	mov r0, #1     ; stdout
+	ldr r1, =msg
+	mov r2, #13
+	svc #0
+
+	mov r7, #1	     ; exit
+	mov r0, #0
+	svc #0
+
+.align 4
+msg:	ascii &quot;Hello World\n&quot;
+
+
+	</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTextBrowser" name="textBrowser">
+       <property name="font">
+        <font>
+         <family>JetBrains Mono</family>
+        </font>
+       </property>
+       <property name="html">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'JetBrains Mono'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Elf executable ARM64&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>900</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <widget class="QMenu" name="menuNew_2">
+     <property name="title">
+      <string>New</string>
+     </property>
+     <addaction name="actionAssembly_File_1"/>
+     <addaction name="actionHEX_File"/>
+    </widget>
+    <widget class="QMenu" name="menuOpen">
+     <property name="title">
+      <string>Open...</string>
+     </property>
+     <addaction name="actionAssembly_File_2"/>
+     <addaction name="actionHEX_File_2"/>
+    </widget>
+    <addaction name="menuNew_2"/>
+    <addaction name="menuOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSave_as"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionFont"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionAppereances"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionContact"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuHelp"/>
+   <addaction name="menuSettings"/>
+  </widget>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionSave_as">
+   <property name="text">
+    <string>Save as</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionFont">
+   <property name="text">
+    <string>Font</string>
+   </property>
+  </action>
+  <action name="actionAssembly_File_1">
+   <property name="text">
+    <string>Assembly File</string>
+   </property>
+  </action>
+  <action name="actionHEX_File">
+   <property name="text">
+    <string>HEX File</string>
+   </property>
+  </action>
+  <action name="actionAssembly_File_2">
+   <property name="text">
+    <string>Assembly File</string>
+   </property>
+  </action>
+  <action name="actionHEX_File_2">
+   <property name="text">
+    <string>HEX File</string>
+   </property>
+  </action>
+  <action name="actionAppereances">
+   <property name="text">
+    <string>Appereances</string>
+   </property>
+  </action>
+  <action name="actionContact">
+   <property name="text">
+    <string>Contact</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
