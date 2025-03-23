@@ -11,9 +11,16 @@
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow) {
         ui->setupUi(this);
 
+        setWindowTitle("hxdump");
+
         mode_label = new QLabel(this);
         mode_label->setText("KURRRRWAAAAA MAAAAAAĆ!!!");
         ui->statusbar->addPermanentWidget(mode_label);
+
+        QLabel *author_label = new QLabel(this);
+        author_label->setText("Artur Twardzik");
+        ui->statusbar->addPermanentWidget(author_label);
+
 
         QAction *preferencesAction = new QAction("Preferences", this);
         preferencesAction->setMenuRole(QAction::PreferencesRole);
@@ -57,6 +64,7 @@ void MainWindow::on_actionAssembly_File_2_triggered(bool checked) {
         QString text = in.readAll();
         file.close();
 
+        ui->plainTextEdit->setPlainText(text);
         mode_label->setText("Mode: Assembly → HEX");
 }
 

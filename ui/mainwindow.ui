@@ -50,6 +50,9 @@
          <family>JetBrains Mono</family>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="plainText">
         <string>.global _start
 .text
@@ -78,6 +81,9 @@ msg:	ascii &quot;Hello World\n&quot;
         <font>
          <family>JetBrains Mono</family>
         </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
        </property>
        <property name="html">
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -149,16 +155,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </property>
     <addaction name="actionContact"/>
    </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuHelp"/>
-   <addaction name="menuSettings"/>
   </widget>
   <action name="actionSave">
    <property name="text">
