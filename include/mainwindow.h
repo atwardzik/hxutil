@@ -35,13 +35,13 @@ public:
         ~MainWindow();
 
 private slots:
-        void on_compile_button_clicked(bool checked);
-
         void on_actionAssembly_File_2_triggered(bool checked);
 
         void on_actionAssembly_File_1_triggered(bool checked);
 
         void on_actionHEX_File_2_triggered(bool checked);
+
+        void on_actionCompileButton_triggered(bool checked);
 
 private:
         Ui::MainWindow *ui;

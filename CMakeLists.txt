@@ -27,6 +27,7 @@ qt_add_executable(hxdump
         src/highlighter.cpp
         include/code_editor.h
         src/code_editor.cpp
+        include/color_palette.h
         #        src/binary_file_handler.cppm
 )
 

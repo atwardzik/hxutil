@@ -13,6 +13,8 @@
 #include <QApplication>
 #include <QFont>
 
+#include "color_palette.h"
+
 class CodeEditor : public QPlainTextEdit {
         Q_OBJECT
 

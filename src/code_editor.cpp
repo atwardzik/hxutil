@@ -23,12 +23,12 @@ void CodeEditor::changePalette() {
 
         if (QStyleHints const *style = QGuiApplication::styleHints();
                 style->colorScheme() == Qt::ColorScheme::Dark) {
-                lineColor = QColor("#31353E");
-                backgroundColor = QColor("#282C34");
+                backgroundColor = DarkTheme::backgroundColor;
+                lineColor = DarkTheme::lineHighlight;
         }
         else {
-                lineColor = QColor("#ABB2BF").lighter(130);
-                backgroundColor = QColor(Qt::white);
+                backgroundColor = LightTheme::backgroundColor;
+                lineColor = LightTheme::lineHighlight;
         }
 
         QPalette palette = this->palette();

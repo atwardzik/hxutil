@@ -15,11 +15,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         setWindowTitle("hxdump");
 
         mode_label = new QLabel(this);
-        mode_label->setText("KURRRRWAAAAA MAAAAAAĆ!!!");
+        mode_label->setText("Mode: <none>");
+        mode_label->setStyleSheet("margin-right: 10px;");
         ui->statusbar->addPermanentWidget(mode_label);
 
         QLabel *author_label = new QLabel(this);
-        author_label->setText("Artur Twardzik");
+        author_label->setText("Author: Artur Twardzik");
         ui->statusbar->addPermanentWidget(author_label);
 
 
@@ -37,13 +38,6 @@ MainWindow::~MainWindow() {
         delete ui;
 }
 
-void MainWindow::on_compile_button_clicked(bool checked) {
-        QString contents = ui->plainTextEdit->toPlainText();
-        QString new_contents = contents += "\n; endline\n";
-        ui->plainTextEdit->setPlainText(new_contents);
-
-        ui->textBrowser->setText(contents);
-}
 
 void MainWindow::on_actionAssembly_File_2_triggered(bool checked) {
         QString file_name = QFileDialog::getOpenFileName(this, "Open the file",
@@ -68,6 +62,7 @@ void MainWindow::on_actionAssembly_File_2_triggered(bool checked) {
 }
 
 void MainWindow::on_actionAssembly_File_1_triggered(bool checked) {}
+
 
 void MainWindow::on_actionHEX_File_2_triggered(bool checked) {
         QString file_name = QFileDialog::getOpenFileName(this, "Open the file",
@@ -95,4 +90,11 @@ void MainWindow::on_actionHEX_File_2_triggered(bool checked) {
 
         ui->plainTextEdit->setPlainText(text);
         mode_label->setText("Mode: HEX → Dump/Disassembly");
+}
+
+
+void MainWindow::on_actionCompileButton_triggered(bool checked) {
+        QString contents = ui->plainTextEdit->toPlainText();
+
+        ui->textBrowser->setText(contents);
 }

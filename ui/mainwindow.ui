@@ -103,13 +103,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </widget>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="compile_button">
-      <property name="text">
-       <string>Compile</string>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
