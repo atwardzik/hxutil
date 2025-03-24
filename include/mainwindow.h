@@ -43,6 +43,12 @@ private slots:
 
         void on_actionCompileButton_triggered(bool checked);
 
+protected:
+        void changeEvent(QEvent *) override;
+
+private:
+        void changePalette();
+
 private:
         Ui::MainWindow *ui;
         QString current_file;

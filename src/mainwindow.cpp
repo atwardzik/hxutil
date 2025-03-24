@@ -31,11 +31,47 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         QMenu *fileMenu = ui->menubar->addMenu("File");
         fileMenu->addAction(preferencesAction);
 
+        changePalette();
+
+        ui->plainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
+        ui->textBrowser->setLineWrapMode(QTextEdit::NoWrap);
+        ui->textBrowser_2->setLineWrapMode(QTextEdit::NoWrap);
+
         highlighter = new Highlighter(ui->plainTextEdit->document());
 }
 
 MainWindow::~MainWindow() {
         delete ui;
+}
+
+
+void MainWindow::changePalette() {
+        QColor backgroundColor;
+
+        if (QStyleHints const *style = QGuiApplication::styleHints();
+                style->colorScheme() == Qt::ColorScheme::Dark) {
+                backgroundColor = DarkTheme::backgroundColor;
+        }
+        else {
+                backgroundColor = LightTheme::backgroundColor;
+        }
+
+        QPalette palette = ui->textBrowser->palette();
+        palette.setColor(QPalette::Inactive, QPalette::Base, backgroundColor);
+        palette.setColor(QPalette::Active, QPalette::Base, backgroundColor);
+        ui->textBrowser->setPalette(palette);
+        ui->textBrowser_2->setPalette(palette);
+}
+
+
+void MainWindow::changeEvent(QEvent *event) {
+        if (event->type() == QEvent::ThemeChange ||
+            event->type() == QEvent::StyleChange ||
+            event->type() == QEvent::PaletteChange) {
+                changePalette();
+        }
+
+        QMainWindow::changeEvent(event);
 }
 
 
