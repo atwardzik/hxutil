@@ -52,7 +52,7 @@ Highlighter::Highlighter(QTextDocument *parent): QSyntaxHighlighter(parent) {
         highlightingRules.append(rule);
 
         singleLineCommentFormat.setForeground(QBrush(QColor("#ABB2BF")));
-        rule.pattern = QRegularExpression(QStringLiteral("(//[^\n]*)|(;[^\n]*)"));
+        rule.pattern = QRegularExpression(QStringLiteral("(//[^\n]*)|(;[^\n]*)|(@[^\n]*)"));
         rule.format = singleLineCommentFormat;
         highlightingRules.append(rule);
 

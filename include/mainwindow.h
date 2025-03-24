@@ -9,12 +9,14 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QAction>
+#include <QToolButton>
 #include <qwindowdefs.h>
 
 #include <vector>
 
 #include "hex_mod.h"
 #include "highlighter.h"
+#include "code_editor.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -44,13 +46,14 @@ private slots:
 private:
         Ui::MainWindow *ui;
         QString current_file;
-        QPlainTextEdit *editor;
+        QMenu *preferences;
         QMenuBar *menu_bar;
         QAction *menu_action;
-        std::vector<uint8_t> hex_bytes;
-        QLabel *mode_label;
-        QMenu *preferences;
+        CodeEditor *code_editor;
         Highlighter *highlighter;
+        QLabel *mode_label;
+
+        std::vector<uint8_t> hex_bytes;
 
         void showPreferencesDialog() {
                 QMessageBox::information(this, "Preferences", "Open Preferences Dialog Here!");

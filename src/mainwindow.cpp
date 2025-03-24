@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "mainwindow.h"
+#include "mainwindow.h"
 #include "../ui/ui_mainwindow.h"
 
 #include <iostream>
@@ -29,9 +30,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         QMenu *fileMenu = ui->menubar->addMenu("File");
         fileMenu->addAction(preferencesAction);
 
-
-        editor = ui->plainTextEdit;
-        highlighter = new Highlighter(editor->document());
+        highlighter = new Highlighter(ui->plainTextEdit->document());
 }
 
 MainWindow::~MainWindow() {
