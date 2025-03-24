@@ -4,6 +4,7 @@
 
 #include "code_editor.h"
 
+
 CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent) {
         lineNumberArea = new LineNumberArea(this);
 
@@ -11,9 +12,34 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent) {
         connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
         connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
 
+        changePalette();
+
         updateLineNumberAreaWidth(0);
         highlightCurrentLine();
 }
+
+void CodeEditor::changePalette() {
+        QColor backgroundColor;
+
+        if (QStyleHints const *style = QGuiApplication::styleHints();
+                style->colorScheme() == Qt::ColorScheme::Dark) {
+                lineColor = QColor("#31353E");
+                backgroundColor = QColor("#282C34");
+        }
+        else {
+                lineColor = QColor("#ABB2BF").lighter(130);
+                backgroundColor = QColor(Qt::white);
+        }
+
+        QPalette palette = this->palette();
+        palette.setColor(QPalette::Inactive, QPalette::Base, backgroundColor);
+        palette.setColor(QPalette::Active, QPalette::Base, backgroundColor);
+        this->setPalette(palette);
+        this->setBackgroundVisible(false);
+
+        highlightCurrentLine();
+}
+
 
 unsigned int CodeEditor::lineNumberAreaWidth() {
         unsigned int digits = 1;
@@ -48,11 +74,22 @@ void CodeEditor::updateLineNumberArea(const QRect &rect, int dy) {
         }
 }
 
+
 void CodeEditor::resizeEvent(QResizeEvent *e) {
         QPlainTextEdit::resizeEvent(e);
 
         QRect cr = contentsRect();
         lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
+}
+
+void CodeEditor::changeEvent(QEvent *event) {
+        if (event->type() == QEvent::ThemeChange ||
+            event->type() == QEvent::StyleChange ||
+            event->type() == QEvent::PaletteChange) {
+                changePalette();
+        }
+
+        QPlainTextEdit::changeEvent(event);
 }
 
 
@@ -61,8 +98,6 @@ void CodeEditor::highlightCurrentLine() {
 
         if (!isReadOnly()) {
                 QTextEdit::ExtraSelection selection;
-
-                QColor lineColor = QColor(Qt::yellow).lighter(160);
 
                 selection.format.setBackground(lineColor);
                 selection.format.setProperty(QTextFormat::FullWidthSelection, true);

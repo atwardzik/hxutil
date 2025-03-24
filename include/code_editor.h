@@ -5,6 +5,8 @@
 #ifndef CODE_EDITOR_H
 #define CODE_EDITOR_H
 
+#include <QGuiApplication>
+#include <QStyleHints>
 #include <QPlainTextEdit>
 #include <QPainter>
 #include <QTextBlock>
@@ -22,7 +24,9 @@ public:
         unsigned int lineNumberAreaWidth();
 
 protected:
-        void resizeEvent(QResizeEvent *event);
+        void resizeEvent(QResizeEvent *event) final;
+
+        void changeEvent(QEvent *) final;
 
 private slots:
         void updateLineNumberAreaWidth(int newBlockCount);
@@ -32,7 +36,12 @@ private slots:
         void updateLineNumberArea(const QRect &, int);
 
 private:
+        void changePalette();
+
+private:
         QWidget *lineNumberArea;
+
+        QColor lineColor;
 };
 
 
