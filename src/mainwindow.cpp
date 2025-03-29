@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <QPushButton>
 #include <sstream>
 // import binary_file_handler;
 
@@ -24,12 +25,17 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         ui->statusbar->addPermanentWidget(author_label);
 
 
+        QMenu *fileMenu = ui->menubar->addMenu("App");
+
         QAction *preferencesAction = new QAction("Preferences", this);
         preferencesAction->setMenuRole(QAction::PreferencesRole);
         connect(preferencesAction, &QAction::triggered, this, &MainWindow::showPreferencesDialog);
-
-        QMenu *fileMenu = ui->menubar->addMenu("File");
         fileMenu->addAction(preferencesAction);
+
+        QAction *quitAction = new QAction("Quit", this);
+        quitAction->setShortcut(QKeySequence::Quit);
+        QObject::connect(quitAction, &QAction::triggered, this, &QApplication::quit);
+        fileMenu->addAction(quitAction);
 
         changePalette();
 
@@ -72,6 +78,26 @@ void MainWindow::changeEvent(QEvent *event) {
         }
 
         QMainWindow::changeEvent(event);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("Confirm Exit");
+        msgBox.setText("Are you sure you want to exit?");
+        msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        int ret = msgBox.exec();
+
+        switch (ret) {
+                case QMessageBox::Cancel:
+                        event->ignore();
+                        break;
+                case QMessageBox::Ok:
+                        event->accept();
+                        break;
+                default:
+                        break;
+        }
 }
 
 

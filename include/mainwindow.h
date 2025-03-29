@@ -10,6 +10,8 @@
 #include <QMenu>
 #include <QAction>
 #include <QToolButton>
+#include <QShortcut>
+#include <QCursor>
 #include <qwindowdefs.h>
 
 #include <vector>
@@ -46,6 +48,8 @@ private slots:
 protected:
         void changeEvent(QEvent *) override;
 
+        void closeEvent(QCloseEvent *event) override;
+
 private:
         void changePalette();
 
@@ -62,7 +66,9 @@ private:
         std::vector<uint8_t> hex_bytes;
 
         void showPreferencesDialog() {
-                QMessageBox::information(this, "Preferences", "Open Preferences Dialog Here!");
+                QDialog dialog(this);
+                dialog.exec();
+                // QMessageBox::information(this, "Preferences", "Open Preferences Dialog Here!");
         }
 };
 #endif // MAINWINDOW_H
