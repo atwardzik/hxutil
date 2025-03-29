@@ -37,11 +37,11 @@ public:
         ~MainWindow();
 
 private slots:
-        void on_actionAssembly_File_2_triggered(bool checked);
+        void on_actionAssemblyNewFile_triggered(bool checked);
 
-        void on_actionAssembly_File_1_triggered(bool checked);
+        void on_actionAssemblyOpenFile_triggered(bool checked);
 
-        void on_actionHEX_File_2_triggered(bool checked);
+        void on_actionHEXOpenFile_triggered(bool checked);
 
         void on_actionCompileButton_triggered(bool checked);
 
@@ -51,6 +51,12 @@ protected:
         void closeEvent(QCloseEvent *event) override;
 
 private:
+        void setupInfoStrings();
+
+        void setupMainMenu();
+
+        void setupTextWindows();
+
         void changePalette();
 
 private:
@@ -61,7 +67,7 @@ private:
         QAction *menu_action;
         CodeEditor *code_editor;
         Highlighter *highlighter;
-        QLabel *mode_label;
+        QLabel *modeLabel;
 
         std::vector<uint8_t> hex_bytes;
 

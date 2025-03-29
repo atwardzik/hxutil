@@ -12,42 +12,53 @@
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow) {
         ui->setupUi(this);
-
-        setWindowTitle("hxdump");
-
-        mode_label = new QLabel(this);
-        mode_label->setText("Mode: <none>");
-        mode_label->setStyleSheet("margin-right: 10px;");
-        ui->statusbar->addPermanentWidget(mode_label);
-
-        QLabel *author_label = new QLabel(this);
-        author_label->setText("Author: Artur Twardzik");
-        ui->statusbar->addPermanentWidget(author_label);
-
-
-        QMenu *fileMenu = ui->menubar->addMenu("App");
-
-        QAction *preferencesAction = new QAction("Preferences", this);
-        preferencesAction->setMenuRole(QAction::PreferencesRole);
-        connect(preferencesAction, &QAction::triggered, this, &MainWindow::showPreferencesDialog);
-        fileMenu->addAction(preferencesAction);
-
-        QAction *quitAction = new QAction("Quit", this);
-        quitAction->setShortcut(QKeySequence::Quit);
-        QObject::connect(quitAction, &QAction::triggered, this, &QApplication::quit);
-        fileMenu->addAction(quitAction);
+        setWindowTitle("hxutil");
 
         changePalette();
 
-        ui->plainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
-        ui->textBrowser->setLineWrapMode(QTextEdit::NoWrap);
-        ui->textBrowser_2->setLineWrapMode(QTextEdit::NoWrap);
+        setupInfoStrings();
 
-        highlighter = new Highlighter(ui->plainTextEdit->document());
+        setupMainMenu();
+
+        setupTextWindows();
 }
 
 MainWindow::~MainWindow() {
         delete ui;
+}
+
+
+void MainWindow::setupInfoStrings() {
+        modeLabel = new QLabel(this);
+        modeLabel->setText("Mode: <none>");
+        modeLabel->setStyleSheet("margin-right: 10px;");
+        ui->statusbar->addPermanentWidget(modeLabel);
+
+        QLabel *authorLabel = new QLabel(this);
+        authorLabel->setText("Author: Artur Twardzik");
+        ui->statusbar->addPermanentWidget(authorLabel);
+}
+
+void MainWindow::setupMainMenu() {
+        QMenu *actionMenu = ui->menubar->addMenu("Action");
+
+        QAction *preferencesAction = new QAction("Preferences", this);
+        preferencesAction->setMenuRole(QAction::PreferencesRole);
+        connect(preferencesAction, &QAction::triggered, this, &MainWindow::showPreferencesDialog);
+        actionMenu->addAction(preferencesAction);
+
+        QAction *quitAction = new QAction("Quit", this);
+        quitAction->setShortcut(QKeySequence::Quit);
+        connect(quitAction, &QAction::triggered, this, &QApplication::quit);
+        actionMenu->addAction(quitAction);
+}
+
+void MainWindow::setupTextWindows() {
+        ui->plainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
+        ui->textBrowserUp->setLineWrapMode(QTextEdit::NoWrap);
+        ui->textBrowserDown->setLineWrapMode(QTextEdit::NoWrap);
+
+        highlighter = new Highlighter(ui->plainTextEdit->document());
 }
 
 
@@ -62,11 +73,11 @@ void MainWindow::changePalette() {
                 backgroundColor = LightTheme::backgroundColor;
         }
 
-        QPalette palette = ui->textBrowser->palette();
+        QPalette palette = ui->textBrowserUp->palette();
         palette.setColor(QPalette::Inactive, QPalette::Base, backgroundColor);
         palette.setColor(QPalette::Active, QPalette::Base, backgroundColor);
-        ui->textBrowser->setPalette(palette);
-        ui->textBrowser_2->setPalette(palette);
+        ui->textBrowserUp->setPalette(palette);
+        ui->textBrowserDown->setPalette(palette);
 }
 
 
@@ -101,7 +112,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 
-void MainWindow::on_actionAssembly_File_2_triggered(bool checked) {
+void MainWindow::on_actionAssemblyOpenFile_triggered(bool checked) {
         QString file_name = QFileDialog::getOpenFileName(this, "Open the file",
                                                          QDir::homePath(), "Assembly files (*.s)");
         if (file_name.isEmpty()) {
@@ -114,19 +125,19 @@ void MainWindow::on_actionAssembly_File_2_triggered(bool checked) {
                 QMessageBox::warning(this, "Warning", "Cannot open file: " + file.errorString());
                 return;
         }
-        // setWindowTitle(file_name);
+
         QTextStream in(&file);
         QString text = in.readAll();
         file.close();
 
         ui->plainTextEdit->setPlainText(text);
-        mode_label->setText("Mode: Assembly → HEX");
+        modeLabel->setText("Mode: Assembly → HEX");
 }
 
-void MainWindow::on_actionAssembly_File_1_triggered(bool checked) {}
+void MainWindow::on_actionAssemblyNewFile_triggered(bool checked) {}
 
 
-void MainWindow::on_actionHEX_File_2_triggered(bool checked) {
+void MainWindow::on_actionHEXOpenFile_triggered(bool checked) {
         QString file_name = QFileDialog::getOpenFileName(this, "Open the file",
                                                          QDir::homePath(), "Object files (*.o *.obj *.elf *.so *.out)");
         if (file_name.isEmpty()) {
@@ -151,12 +162,12 @@ void MainWindow::on_actionHEX_File_2_triggered(bool checked) {
         QString text = QString::fromStdString(bytes_to_printable(bytes));
 
         ui->plainTextEdit->setPlainText(text);
-        mode_label->setText("Mode: HEX → Dump/Disassembly");
+        modeLabel->setText("Mode: HEX → Dump/Disassembly");
 }
 
 
 void MainWindow::on_actionCompileButton_triggered(bool checked) {
         QString contents = ui->plainTextEdit->toPlainText();
 
-        ui->textBrowser->setText(contents);
+        ui->textBrowserDown->setText(contents);
 }
