@@ -34,7 +34,7 @@ qt_add_executable(hxutil
         src/mainwindow.cpp
         include/mainwindow.h
         ui/mainwindow.ui
-        include/hex_mod.h
+        include/file_modifier.h
         include/highlighter.h
         src/highlighter/highlighter.cpp
         include/code_editor.h

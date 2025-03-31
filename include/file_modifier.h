@@ -6,11 +6,15 @@
 #define HEX_MOD_H
 
 #include <string>
+#include <fstream>
 #include <sstream>
 #include <vector>
 #include <cstdint>
+#include <exception>
 
-inline std::string bytes_to_str_repr(std::vector<uint8_t> &hex_bytes) {
+//TODO: remove inlines, make the file cpp module
+
+inline std::string bytesToStrRepr(std::vector<uint8_t> &hex_bytes) {
         std::stringstream out;
 
         size_t counter = 0;
@@ -32,7 +36,7 @@ inline std::string bytes_to_str_repr(std::vector<uint8_t> &hex_bytes) {
         return out.str();
 }
 
-inline std::string bytes_to_printable(std::vector<uint8_t> &hex_bytes) {
+inline std::string bytesToPrintable(std::vector<uint8_t> &hex_bytes) {
         std::stringstream out;
 
         size_t counter = 0;
@@ -51,6 +55,34 @@ inline std::string bytes_to_printable(std::vector<uint8_t> &hex_bytes) {
         }
 
         return out.str();
+}
+
+
+inline std::string readPlainText(const std::string &filename, std::ios_base::openmode mode = std::ios::in) {
+        std::ifstream file(filename, mode);
+
+        if (!file.is_open()) {
+                throw std::runtime_error(std::format("File: {} could not be opened.", filename));
+        }
+
+        std::string plainText;
+        if (mode == std::ios::in) {
+                std::string line;
+                while (std::getline(file, line)) {
+                        plainText += line + "\n";
+                }
+        }
+        else if (mode == (std::ios::in | std::ios::binary)) {
+                std::vector<uint8_t> bytes(
+                        (std::istreambuf_iterator<char>(file)),
+                        (std::istreambuf_iterator<char>()));
+
+                plainText = bytesToPrintable(bytes);
+        }
+
+        file.close();
+
+        return plainText;
 }
 
 #endif //HEX_MOD_H

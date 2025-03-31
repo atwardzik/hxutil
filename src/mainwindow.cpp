@@ -57,13 +57,12 @@ void MainWindow::setupMainMenu() {
 }
 
 void MainWindow::setupTextWindows() {
-        ui->plainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
+        codeEditor = ui->plainTextEdit;
+        codeEditor->setLineWrapMode(QPlainTextEdit::NoWrap);
         ui->textBrowserUp->setLineWrapMode(QTextEdit::NoWrap);
         ui->textBrowserDown->setLineWrapMode(QTextEdit::NoWrap);
 
-        // highlighter = new Highlighter(ui->plainTextEdit->document());
-        highlighter = new ARMv6_ASM_Highlighter(ui->plainTextEdit->document());
-        //TODO: highlighter should be instantiated depending on file type
+        setHighlighter(Language::ARMv6_ASM);
 }
 
 
@@ -116,26 +115,36 @@ void MainWindow::closeEvent(QCloseEvent *event) {
         }
 }
 
+void MainWindow::setHighlighter(Language language) {
+        delete highlighter;
+
+        switch (language) {
+                using enum Language;
+                case ARMv6_ASM:
+                        highlighter = new ARMv6_ASM_Highlighter(codeEditor->document());
+                        break;
+                case x86_ASM:
+                case C:
+                case HEX:
+                default:
+                        highlighter = nullptr;
+                        break;
+        }
+}
+
 
 void MainWindow::on_actionAssemblyOpenFile_triggered(bool checked) {
-        QString file_name = QFileDialog::getOpenFileName(this, "Open the file",
-                                                         QDir::homePath(), "Assembly files (*.s)");
-        if (file_name.isEmpty()) {
+        QString fileName = QFileDialog::getOpenFileName(this, "Open the file",
+                                                        QDir::homePath(), "Assembly files (*.s)");
+        if (fileName.isEmpty()) {
                 return;
         }
+        currentFile = fileName;
 
-        QFile file(file_name);
-        current_file = file_name;
-        if (!file.open(QIODevice::ReadOnly | QFile::Text)) {
-                QMessageBox::warning(this, "Warning", "Cannot open file: " + file.errorString());
-                return;
-        }
+        const QString text = QString::fromStdString(readPlainText(fileName.toStdString()));
 
-        QTextStream in(&file);
-        QString text = in.readAll();
-        file.close();
-
-        ui->plainTextEdit->setPlainText(text);
+        codeEditor->setPlainText(text);
+        setHighlighter(Language::ARMv6_ASM);
         modeLabel->setText("Mode: Assembly → HEX");
 }
 
@@ -143,30 +152,17 @@ void MainWindow::on_actionAssemblyNewFile_triggered(bool checked) {}
 
 
 void MainWindow::on_actionHEXOpenFile_triggered(bool checked) {
-        QString file_name = QFileDialog::getOpenFileName(this, "Open the file",
-                                                         QDir::homePath(), "Object files (*.o *.obj *.elf *.so *.out)");
-        if (file_name.isEmpty()) {
+        QString fileName = QFileDialog::getOpenFileName(this, "Open the file",
+                                                        QDir::homePath(), "Object files (*.o *.obj *.elf *.so *.out)");
+        if (fileName.isEmpty()) {
                 return;
         }
+        currentFile = fileName;
 
-        std::ifstream file(file_name.toStdString(), std::ios::in | std::ios::binary);
-        if (!file.is_open()) {
-                QMessageBox::warning(this, "Warning", "Cannot open file: " + file_name);
-        }
+        const QString text = QString::fromStdString(
+                readPlainText(fileName.toStdString(), std::ios::in | std::ios::binary));
 
-        std::vector<uint8_t> bytes(
-                (std::istreambuf_iterator<char>(file)),
-                (std::istreambuf_iterator<char>()));
-
-        file.close();
-
-        current_file = file_name;
-
-        hex_bytes = bytes;
-
-        QString text = QString::fromStdString(bytes_to_printable(bytes));
-
-        ui->plainTextEdit->setPlainText(text);
+        codeEditor->setPlainText(text);
         modeLabel->setText("Mode: HEX → Dump/Disassembly");
 }
 

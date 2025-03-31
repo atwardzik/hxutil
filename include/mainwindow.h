@@ -16,7 +16,7 @@
 
 #include <vector>
 
-#include "hex_mod.h"
+#include "file_modifier.h"
 #include "highlighter.h"
 #include "code_editor.h"
 
@@ -27,6 +27,13 @@ namespace Ui {
 }
 
 QT_END_NAMESPACE
+
+enum class Language {
+        ARMv6_ASM,
+        x86_ASM,
+        C,
+        HEX,
+};
 
 class MainWindow : public QMainWindow {
         Q_OBJECT
@@ -59,17 +66,19 @@ private:
 
         void changePalette();
 
+        void setHighlighter(Language language);
+
 private:
         Ui::MainWindow *ui;
-        QString current_file;
+        QString currentFile;
         QMenu *preferences;
-        QMenuBar *menu_bar;
-        QAction *menu_action;
-        CodeEditor *code_editor;
-        Highlighter *highlighter;
+        QMenuBar *menuBar;
+        QAction *menuAction;
+        CodeEditor *codeEditor;
+        Highlighter *highlighter = nullptr;
         QLabel *modeLabel;
 
-        std::vector<uint8_t> hex_bytes;
+        // std::vector<uint8_t> hex_bytes;
 
         void showPreferencesDialog() {
                 QDialog dialog(this);
