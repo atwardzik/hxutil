@@ -61,7 +61,9 @@ void MainWindow::setupTextWindows() {
         ui->textBrowserUp->setLineWrapMode(QTextEdit::NoWrap);
         ui->textBrowserDown->setLineWrapMode(QTextEdit::NoWrap);
 
-        highlighter = new Highlighter(ui->plainTextEdit->document());
+        // highlighter = new Highlighter(ui->plainTextEdit->document());
+        highlighter = new ARMv6_ASM_Highlighter(ui->plainTextEdit->document());
+        //TODO: highlighter should be instantiated depending on file type
 }
 
 

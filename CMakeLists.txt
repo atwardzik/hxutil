@@ -36,12 +36,13 @@ qt_add_executable(hxutil
         ui/mainwindow.ui
         include/hex_mod.h
         include/highlighter.h
-        src/highlighter.cpp
+        src/highlighter/highlighter.cpp
         include/code_editor.h
         src/code_editor.cpp
         include/color_palette.h
         #        src/binary_file_handler.cppm
         ${app_icon_macos}
+        src/highlighter/ARMv6_ASM_highlighter.cpp
 )
 
 #file(GLOB_RECURSE MODULE_INTERFACE_UNITS "*.cppm")

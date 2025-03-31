@@ -11,13 +11,6 @@
 class Highlighter : public QSyntaxHighlighter {
         Q_OBJECT
 
-public:
-        Highlighter(QTextDocument *parent = 0);
-
-protected:
-        void highlightBlock(const QString &text) override;
-
-private:
         struct HighlightingRule {
                 QRegularExpression pattern;
                 QTextCharFormat format;
@@ -25,18 +18,33 @@ private:
 
         QVector<HighlightingRule> highlightingRules;
 
+protected:
+        explicit Highlighter(QTextDocument *parent = nullptr) : QSyntaxHighlighter(parent) {}
+
+        void highlightBlock(const QString &text) override;
+
+        virtual void setupCodeHighlights() = 0;
+
+        void addHighlightingRule(const QTextCharFormat &format, const QRegularExpression &pattern);
+
         QRegularExpression commentStartExpression;
         QRegularExpression commentEndExpression;
-
-        QTextCharFormat keywordFormat;
-        QTextCharFormat classFormat;
-        QTextCharFormat singleLineCommentFormat;
         QTextCharFormat multiLineCommentFormat;
+};
+
+class ARMv6_ASM_Highlighter final : public Highlighter {
+        QTextCharFormat keywordFormat;
+        QTextCharFormat singleLineCommentFormat;
         QTextCharFormat quotationFormat;
         QTextCharFormat functionFormat;
         QTextCharFormat numberFormat;
         QTextCharFormat identifierFormat;
         QTextCharFormat directiveFormat;
+        void setupCodeHighlights() override;
+
+
+public:
+        explicit ARMv6_ASM_Highlighter(QTextDocument *parent = nullptr);
 };
 
 #endif //HIGHLIGHTER_H
