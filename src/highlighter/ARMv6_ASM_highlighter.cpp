@@ -2,6 +2,7 @@
 // Created by Artur Twardzik on 31/03/2025.
 //
 
+
 #include "color_palette.h"
 #include "highlighter.h"
 
@@ -12,115 +13,39 @@ ARMv6_ASM_Highlighter::ARMv6_ASM_Highlighter(QTextDocument *parent) : Highlighte
 
 void ARMv6_ASM_Highlighter::setupCodeHighlights() {
         const QString keywordPatterns[] = {
-                QStringLiteral("\\bmovs\\b"),
-                QStringLiteral("\\bmov\\b"),
-                QStringLiteral("\\badds\\b"),
-                QStringLiteral("\\badd\\b"),
-                QStringLiteral("\\badcs\\b"),
-                QStringLiteral("\\badr\\b"),
-                QStringLiteral("\\bsubs\\b"),
-                QStringLiteral("\\bsbcs\\b"),
-                QStringLiteral("\\bsub\\b"),
-                QStringLiteral("\\brsbs\\b"),
-                QStringLiteral("\\bmuls\\b"),
-                QStringLiteral("\\bcmp\\b"),
-                QStringLiteral("\\bcmn\\b"),
-                QStringLiteral("\\bands\\b"),
-                QStringLiteral("\\beors\\b"),
-                QStringLiteral("\\borrs\\b"),
-                QStringLiteral("\\bbics\\b"),
-                QStringLiteral("\\bmvns\\b"),
-                QStringLiteral("\\btst\\b"),
-                QStringLiteral("\\blsls\\b"),
-                QStringLiteral("\\blsrs\\b"),
-                QStringLiteral("\\basrs\\b"),
-                QStringLiteral("\\brors\\b"),
-                QStringLiteral("\\bldr\\b"),
-                QStringLiteral("\\bldrh\\b"),
-                QStringLiteral("\\bldrb\\b"),
-                QStringLiteral("\\bldrsh\\b"),
-                QStringLiteral("\\blsrsb\\b"),
-                QStringLiteral("\\bldm\\b"),
-                QStringLiteral("\\bstr\\b"),
-                QStringLiteral("\\bstrh\\b"),
-                QStringLiteral("\\bstrb\\b"),
-                QStringLiteral("\\bstr\\b"),
-                QStringLiteral("\\bstrh\\b"),
-                QStringLiteral("\\bstrb\\b"),
-                QStringLiteral("\\bstr\\b"),
-                QStringLiteral("\\bstm\\b"),
-                QStringLiteral("\\bpush\\b"),
-                QStringLiteral("\\bpop\\b"),
-                QStringLiteral("\\bb\\b"),
-                QStringLiteral("\\bbl\\b"),
-                QStringLiteral("\\bbx\\b"),
-                QStringLiteral("\\bblx\\b"),
-                QStringLiteral("\\bbeq\\b"),
-                QStringLiteral("\\bbne\\b"),
-                QStringLiteral("\\bbgt\\b"),
-                QStringLiteral("\\bblt\\b"),
-                QStringLiteral("\\bbge\\b"),
-                QStringLiteral("\\bble\\b"),
-                QStringLiteral("\\bbcs\\b"),
-                QStringLiteral("\\bbcc\\b"),
-                QStringLiteral("\\bbmi\\b"),
-                QStringLiteral("\\bbpl\\b"),
-                QStringLiteral("\\bbvs\\b"),
-                QStringLiteral("\\bbvc\\b"),
-                QStringLiteral("\\bbhi\\b"),
-                QStringLiteral("\\bbls\\b"),
-                QStringLiteral("\\bsxth\\b"),
-                QStringLiteral("\\bsxtb\\b"),
-                QStringLiteral("\\buxth\\b"),
-                QStringLiteral("\\buxtb\\b"),
-                QStringLiteral("\\brev\\b"),
-                QStringLiteral("\\brev16\\b"),
-                QStringLiteral("\\brevsh\\b"),
-                QStringLiteral("\\bsvc\\b"),
-                QStringLiteral("\\bcpsid\\b"),
-                QStringLiteral("\\bcpsie\\b"),
-                QStringLiteral("\\bmrs\\b"),
-                QStringLiteral("\\bmsr\\b"),
-                QStringLiteral("\\bbkpt\\b")
+                "\\bmovs\\b", "\\bmov\\b", "\\badds\\b", "\\badd\\b", "\\badcs\\b", "\\badr\\b", "\\bsubs\\b",
+                "\\bsbcs\\b", "\\bsub\\b", "\\brsbs\\b", "\\bmuls\\b", "\\bcmp\\b", "\\bcmn\\b", "\\bands\\b",
+                "\\beors\\b", "\\borrs\\b", "\\bbics\\b", "\\bmvns\\b", "\\btst\\b", "\\blsls\\b", "\\blsrs\\b",
+                "\\basrs\\b", "\\brors\\b", "\\bldr\\b", "\\bldrh\\b", "\\bldrb\\b", "\\bldrsh\\b", "\\blsrsb\\b",
+                "\\bldm\\b", "\\bstr\\b", "\\bstrh\\b", "\\bstrb\\b", "\\bstr\\b", "\\bstrh\\b", "\\bstrb\\b",
+                "\\bstr\\b", "\\bstm\\b", "\\bpush\\b", "\\bpop\\b", "\\bb\\b", "\\bbl\\b", "\\bbx\\b",
+                "\\bblx\\b", "\\bbeq\\b", "\\bbne\\b", "\\bbgt\\b", "\\bblt\\b", "\\bbge\\b", "\\bble\\b",
+                "\\bbcs\\b", "\\bbcc\\b", "\\bbmi\\b", "\\bbpl\\b", "\\bbvs\\b", "\\bbvc\\b", "\\bbhi\\b",
+                "\\bbls\\b", "\\bsxth\\b", "\\bsxtb\\b", "\\buxth\\b", "\\buxtb\\b", "\\brev\\b", "\\brev16\\b",
+                "\\brevsh\\b", "\\bsvc\\b", "\\bcpsid\\b", "\\bcpsie\\b", "\\bmrs\\b", "\\bmsr\\b", "\\bbkpt\\b"
         };
         keywordFormat.setForeground(OneDarkTheme::magenta);
         keywordFormat.setFontItalic(true);
         for (const QString &pattern: keywordPatterns) {
-                addHighlightingRule(keywordFormat, QRegularExpression(pattern));
+                addHighlightingRule(keywordFormat, pattern);
         }
 
         quotationFormat.setForeground(OneDarkTheme::green);
-        addHighlightingRule(quotationFormat, QRegularExpression(QStringLiteral("\".\"")));
+        addHighlightingRule(quotationFormat, "\".*\"");
 
+        numberFormat.setForeground(OneDarkTheme::cyan);
+        addHighlightingRule(numberFormat, "#[0-9A-Fa-fx]*");
 
-        // numberFormat.setForeground(QBrush(QColor("#56B6C2")));
-        // rule.pattern = QRegularExpression(QStringLiteral("#[0-9A-Fa-fx]*"));
-        // rule.format = numberFormat;
-        // highlightingRules.append(rule);
-        //
-        // identifierFormat.setForeground(QBrush(QColor("#61AFEF")));
-        // rule.pattern = QRegularExpression(QStringLiteral("[^\n]*:"));
-        // rule.format = identifierFormat;
-        // highlightingRules.append(rule);
-        //
-        // directiveFormat.setForeground(QBrush(QColor("#E5C07B")));
-        // rule.pattern = QRegularExpression(QStringLiteral("\\.([^\n\\s]+)(\\s|\n)"));
-        // rule.format = directiveFormat;
-        // highlightingRules.append(rule);
-        //
-        // functionFormat.setFontItalic(true);
-        // functionFormat.setForeground(Qt::blue);
-        // rule.pattern = QRegularExpression(QStringLiteral("\\b[A-Za-z0-9_]+(?=\\()"));
-        // rule.format = functionFormat;
-        // highlightingRules.append(rule);
-        //
-        // singleLineCommentFormat.setForeground(QBrush(QColor("#ABB2BF")));
-        // rule.pattern = QRegularExpression(QStringLiteral("(//[^\n]*)|(;[^\n]*)|(@[^\n]*)"));
-        // rule.format = singleLineCommentFormat;
-        // highlightingRules.append(rule);
+        identifierFormat.setForeground(OneDarkTheme::blue);
+        addHighlightingRule(identifierFormat, "[^\n]*:");
 
-        multiLineCommentFormat.setForeground(QBrush(QColor("#ABB2BF")));
+        directiveFormat.setForeground(OneDarkTheme::yellow);
+        addHighlightingRule(directiveFormat, R"(\.\S*(\s|$))");
 
+        singleLineCommentFormat.setForeground(OneDarkTheme::lightGray);
+        addHighlightingRule(singleLineCommentFormat, "(//[^\n]*)|(;[^\n]*)|(@[^\n]*)");
+
+        multiLineCommentFormat.setForeground(OneDarkTheme::lightGray);
         commentStartExpression = QRegularExpression(QStringLiteral("/\\*"));
         commentEndExpression = QRegularExpression(QStringLiteral("\\*/"));
 }

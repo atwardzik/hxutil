@@ -4,9 +4,9 @@
 
 #include "highlighter.h"
 
-void Highlighter::addHighlightingRule(const QTextCharFormat &format, const QRegularExpression &pattern) {
+void Highlighter::addHighlightingRule(const QTextCharFormat &format, const QString &pattern) {
         const HighlightingRule rule{
-                .pattern = pattern,
+                .pattern = QRegularExpression(QString(pattern)),
                 .format = format,
         };
 

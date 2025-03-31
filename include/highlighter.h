@@ -25,7 +25,7 @@ protected:
 
         virtual void setupCodeHighlights() = 0;
 
-        void addHighlightingRule(const QTextCharFormat &format, const QRegularExpression &pattern);
+        void addHighlightingRule(const QTextCharFormat &format, const QString &pattern);
 
         QRegularExpression commentStartExpression;
         QRegularExpression commentEndExpression;
@@ -36,12 +36,11 @@ class ARMv6_ASM_Highlighter final : public Highlighter {
         QTextCharFormat keywordFormat;
         QTextCharFormat singleLineCommentFormat;
         QTextCharFormat quotationFormat;
-        QTextCharFormat functionFormat;
         QTextCharFormat numberFormat;
         QTextCharFormat identifierFormat;
         QTextCharFormat directiveFormat;
-        void setupCodeHighlights() override;
 
+        void setupCodeHighlights() override;
 
 public:
         explicit ARMv6_ASM_Highlighter(QTextDocument *parent = nullptr);
