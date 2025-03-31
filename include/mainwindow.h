@@ -73,6 +73,7 @@ private:
 
         void showPreferencesDialog() {
                 QDialog dialog(this);
+                dialog.setWindowTitle("Tutaj dokona się akt stworzenia!");
                 dialog.exec();
                 // QMessageBox::information(this, "Preferences", "Open Preferences Dialog Here!");
         }

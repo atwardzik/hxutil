@@ -17,6 +17,17 @@ namespace DarkTheme {
         const QColor lineHighlight = QColor("#31353E");
 }
 
+namespace OneDarkTheme {
+        const QColor darkGray = QColor("#282C34");
+        const QColor lightGray = QColor("#ABB2BF");
+        const QColor red = QColor("#E06C75");
+        const QColor green = QColor("#98C379");
+        const QColor yellow = QColor("#E5C07B");
+        const QColor blue = QColor("#61AFEF");
+        const QColor magenta = QColor("#C678DD");
+        const QColor cyan = QColor("#56B6C2");
+}
+
 namespace Syntax {}
 
 #endif //PALETTE_H

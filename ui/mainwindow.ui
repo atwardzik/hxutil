@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icon.icns</normaloff>../icon.icns</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
@@ -63,7 +67,7 @@ msg:	.ascii &quot;Hello World\n&quot;
        <property name="orientation">
         <enum>Qt::Orientation::Vertical</enum>
        </property>
-       <widget class="QTextBrowser" name="textBrowser_2">
+       <widget class="QTextBrowser" name="textBrowserUp">
         <property name="font">
          <font>
           <family>JetBrains Mono</family>
@@ -80,7 +84,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ELF ARM-32&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
-       <widget class="QTextBrowser" name="textBrowser">
+       <widget class="QTextBrowser" name="textBrowserDown">
         <property name="font">
          <font>
           <family>JetBrains Mono</family>
@@ -122,21 +126,21 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuNew_2">
+    <widget class="QMenu" name="menuNewFile">
      <property name="title">
       <string>New</string>
      </property>
-     <addaction name="actionAssembly_File_1"/>
-     <addaction name="actionHEX_File"/>
+     <addaction name="actionAssemblyNewFile"/>
+     <addaction name="actionHEXNewFile"/>
     </widget>
     <widget class="QMenu" name="menuOpen">
      <property name="title">
       <string>Open...</string>
      </property>
-     <addaction name="actionAssembly_File_2"/>
-     <addaction name="actionHEX_File_2"/>
+     <addaction name="actionAssemblyOpenFile"/>
+     <addaction name="actionHEXOpenFile"/>
     </widget>
-    <addaction name="menuNew_2"/>
+    <addaction name="menuNewFile"/>
     <addaction name="menuOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_as"/>
@@ -213,22 +217,22 @@ height: 10px;</string>
     <string>Font</string>
    </property>
   </action>
-  <action name="actionAssembly_File_1">
+  <action name="actionAssemblyNewFile">
    <property name="text">
     <string>Assembly File</string>
    </property>
   </action>
-  <action name="actionHEX_File">
+  <action name="actionHEXNewFile">
    <property name="text">
     <string>HEX File</string>
    </property>
   </action>
-  <action name="actionAssembly_File_2">
+  <action name="actionAssemblyOpenFile">
    <property name="text">
     <string>Assembly File</string>
    </property>
   </action>
-  <action name="actionHEX_File_2">
+  <action name="actionHEXOpenFile">
    <property name="text">
     <string>HEX File</string>
    </property>
