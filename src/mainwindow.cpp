@@ -24,6 +24,16 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         setupMainMenu();
 
         setupTextWindows();
+
+        this->ui->stackedWidget->removeWidget(this->ui->page_2);
+        this->ui->stackedWidget->addWidget(new QPlainTextEdit());
+
+        QListWidget *listView = this->ui->listWidget;
+        listView->setFlow(QListView::LeftToRight);
+        new QListWidgetItem(tr("Page 1"), listView);
+        new QListWidgetItem(tr("Page 2"), listView);
+        connect(listView, &QListWidget::currentRowChanged, this->ui->stackedWidget, &QStackedWidget::setCurrentIndex);
+
 }
 
 MainWindow::~MainWindow() {
@@ -119,7 +129,7 @@ void MainWindow::setHighlighter(Language language) {
         delete highlighter;
 
         switch (language) {
-                using enum Language;
+                        using enum Language;
                 case ARMv6_ASM:
                         highlighter = new ARMv6_ASM_Highlighter(codeEditor->document());
                         break;

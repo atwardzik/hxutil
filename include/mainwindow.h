@@ -13,6 +13,8 @@
 #include <QShortcut>
 #include <QCursor>
 #include <qwindowdefs.h>
+#include <QComboBox>
+#include <QListWidget>
 
 #include <vector>
 
@@ -75,7 +77,7 @@ private:
         QMenuBar *menuBar;
         QAction *menuAction;
         CodeEditor *codeEditor;
-        Highlighter *highlighter = nullptr;
+        Highlighter *highlighter = nullptr; //todo: should be property of codeEditor!!!
         QLabel *modeLabel;
 
         // std::vector<uint8_t> hex_bytes;
