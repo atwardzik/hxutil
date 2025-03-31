@@ -41,16 +41,16 @@ void CodeEditor::changePalette() {
 }
 
 
-unsigned int CodeEditor::lineNumberAreaWidth() {
-        unsigned int digits = 1;
-        unsigned int max = qMax(1, blockCount());
+int CodeEditor::lineNumberAreaWidth() {
+        int digits = 1;
+        int max = qMax(1, blockCount());
         while (max >= 10) {
                 max /= 10;
                 ++digits;
         }
 
-        unsigned int space = fontMetrics().averageCharWidth() * 2 + //spaces around
-                             fontMetrics().averageCharWidth() * digits; //numbers
+        int space = fontMetrics().averageCharWidth() * 2 + //spaces around
+                    fontMetrics().averageCharWidth() * digits; //numbers
 
         return space;
 }
@@ -125,7 +125,7 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) {
         while (block.isValid() && top <= event->rect().bottom()) {
                 if (block.isVisible() && bottom >= event->rect().top()) {
                         QString number = " " + QString::number(blockNumber + 1) + " ";
-                        painter.setPen(QColor("#ABB2BF"));
+                        painter.setPen(OneDarkTheme::lightGray);
                         painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(),
                                          Qt::AlignRight, number);
                 }
