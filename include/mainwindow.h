@@ -24,8 +24,8 @@
 #include "file_modifier.h"
 #include "highlighter.h"
 #include "code_editor.h"
-#include "open_files_list.h"
 #include "../ui/ui_mainwindow.h"
+#include "lanugage_specifics.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -35,12 +35,6 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-enum class Language {
-        ARMv6_ASM,
-        x86_ASM,
-        C,
-        HEX,
-};
 
 class MainWindow : public QMainWindow {
         Q_OBJECT
@@ -80,11 +74,12 @@ private:
 
         void changePalette();
 
-        void setHighlighter(Language language);
+        void setHighlighter(QPlainTextEdit *parent, Language language);
+
+        void createTab(CodeEditor *editor, const QIcon &icon, const QString &name);
 
 private:
         Ui::MainWindow *ui;
-        QString currentFile;
         QMenu *preferences;
         QMenuBar *menuBar;
         QAction *menuAction;

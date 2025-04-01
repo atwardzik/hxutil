@@ -27,18 +27,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
         tabWidget = this->ui->tabWidget;
 
-        //TODO: this must be added dynamically as the user opens the file
-        CodeEditor *secondPageEditor = new CodeEditor(this);
         tabWidget->setTabsClosable(true);
         tabWidget->setUsesScrollButtons(true);
         tabWidget->removeTab(1);
-
-
-        QWidget *tab1 = new QWidget();
-        QVBoxLayout *tab1Layout = new QVBoxLayout(tab1);
-        tab1Layout->setContentsMargins(0, 0, 0, 0);
-        tab1Layout->addWidget(secondPageEditor);
-        tabWidget->addTab(tab1, QIcon::fromTheme(QIcon::ThemeIcon::Computer), "main.c with a slightly longer text");
         tabWidget->setElideMode(Qt::TextElideMode::ElideNone);
         ///////////////////////////////////////////////
         /// THIS LINE IS VERY IMPORTANT, DUE TO THE  //
@@ -87,7 +78,7 @@ void MainWindow::setupTextWindows() {
         ui->textBrowserUp->setLineWrapMode(QTextEdit::NoWrap);
         ui->textBrowserDown->setLineWrapMode(QTextEdit::NoWrap);
 
-        setHighlighter(Language::ARMv6_ASM);
+        setHighlighter(codeEditor, Language::ARMv6_ASM);
 }
 
 
@@ -140,36 +131,41 @@ void MainWindow::closeEvent(QCloseEvent *event) {
         }
 }
 
-void MainWindow::setHighlighter(Language language) {
-        delete highlighter;
+void MainWindow::setHighlighter(QPlainTextEdit *parent, Language language) {
+        // delete highlighter;
 
         switch (language) {
                         using enum Language;
                 case ARMv6_ASM:
-                        highlighter = new ARMv6_ASM_Highlighter(codeEditor->document());
+                        new ARMv6_ASM_Highlighter(parent->document());
                         break;
                 case x86_ASM:
                 case C:
                 case HEX:
                 default:
-                        highlighter = nullptr;
+                        // highlighter = nullptr;
                         break;
         }
 }
 
+void MainWindow::createTab(CodeEditor *editor, const QIcon &icon, const QString &name) {
+        QWidget *tab = new QWidget();
+        QVBoxLayout *tabLayout = new QVBoxLayout(tab);
+
+        tabLayout->setContentsMargins(0, 0, 0, 0);
+        tabLayout->addWidget(editor);
+
+        tabWidget->addTab(tab, icon, name);
+}
 
 void MainWindow::on_actionAssemblyOpenFile_triggered(bool checked) {
-        QString fileName = QFileDialog::getOpenFileName(this, "Open the file",
-                                                        QDir::homePath(), "Assembly files (*.s *.asm)");
-        if (fileName.isEmpty()) {
-                return;
-        }
-        currentFile = fileName;
+        const OpenFile file = openFileGetPlaintext(Language::ARMv6_ASM);
 
-        const QString text = QString::fromStdString(readPlainText(fileName.toStdString()));
+        CodeEditor *editor = new CodeEditor(this);
+        editor->setPlainText(file.plaintext);
+        setHighlighter(editor, Language::ARMv6_ASM);
 
-        codeEditor->setPlainText(text);
-        setHighlighter(Language::ARMv6_ASM);
+        createTab(editor, QIcon::fromTheme(QIcon::ThemeIcon::Computer), file.fileName);
         modeLabel->setText("Mode: Assembly → HEX");
 }
 
@@ -177,17 +173,12 @@ void MainWindow::on_actionAssemblyNewFile_triggered(bool checked) {}
 
 
 void MainWindow::on_actionHEXOpenFile_triggered(bool checked) {
-        QString fileName = QFileDialog::getOpenFileName(this, "Open the file",
-                                                        QDir::homePath(), "Object files (*.o *.obj *.elf *.so *.out)");
-        if (fileName.isEmpty()) {
-                return;
-        }
-        currentFile = fileName;
+        const OpenFile file = openFileGetPlaintext(Language::HEX);
 
-        const QString text = QString::fromStdString(
-                readPlainText(fileName.toStdString(), std::ios::in | std::ios::binary));
+        CodeEditor *editor = new CodeEditor(this);
+        editor->setPlainText(file.plaintext);
 
-        codeEditor->setPlainText(text);
+        createTab(editor, QIcon::fromTheme(QIcon::ThemeIcon::DriveHarddisk), file.fileName);
         modeLabel->setText("Mode: HEX → Dump/Disassembly");
 }
 
