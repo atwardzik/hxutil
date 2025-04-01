@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         //TODO: this must be added dynamically as the user opens the file
         CodeEditor *secondPageEditor = new CodeEditor(this);
         tabWidget->setTabsClosable(true);
+        tabWidget->setUsesScrollButtons(true);
         tabWidget->removeTab(1);
 
 
@@ -37,7 +38,15 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         QVBoxLayout *tab1Layout = new QVBoxLayout(tab1);
         tab1Layout->setContentsMargins(0, 0, 0, 0);
         tab1Layout->addWidget(secondPageEditor);
-        tabWidget->addTab(tab1, "File 2");
+        tabWidget->addTab(tab1, QIcon::fromTheme(QIcon::ThemeIcon::Computer), "main.c with a slightly longer text");
+        tabWidget->setElideMode(Qt::TextElideMode::ElideNone);
+        ///////////////////////////////////////////////
+        /// THIS LINE IS VERY IMPORTANT, DUE TO THE  //
+        ///    MACOS BUG (TRUNCATING MIDDLE TEXT)    //
+        ///    FIX IN FUTURE VERSIONS OF SYSTEM      //
+        tabWidget->setIconSize(QSize(10, 10)); //
+        ///////////////////////////////////////////////
+        ///////////////////////////////////////////////
 
         connect(tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::onTabCloseRequested);
 }
@@ -151,7 +160,7 @@ void MainWindow::setHighlighter(Language language) {
 
 void MainWindow::on_actionAssemblyOpenFile_triggered(bool checked) {
         QString fileName = QFileDialog::getOpenFileName(this, "Open the file",
-                                                        QDir::homePath(), "Assembly files (*.s)");
+                                                        QDir::homePath(), "Assembly files (*.s *.asm)");
         if (fileName.isEmpty()) {
                 return;
         }

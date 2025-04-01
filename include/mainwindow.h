@@ -61,7 +61,9 @@ private slots:
 
         void onTabCloseRequested(int index) {
                 qDebug() << "Requested removal: " << index;
+                QWidget *widget = tabWidget->widget(index);
                 tabWidget->removeTab(index);
+                delete widget;
         }
 
 protected:
