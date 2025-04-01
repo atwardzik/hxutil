@@ -21,6 +21,7 @@
 #include "file_modifier.h"
 #include "highlighter.h"
 #include "code_editor.h"
+#include "open_files_list.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -79,8 +80,6 @@ private:
         CodeEditor *codeEditor;
         Highlighter *highlighter = nullptr; //todo: should be property of codeEditor!!!
         QLabel *modeLabel;
-
-        // std::vector<uint8_t> hex_bytes;
 
         void showPreferencesDialog() {
                 QDialog dialog(this);

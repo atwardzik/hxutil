@@ -12,6 +12,7 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent) {
         connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
         connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
 
+        this->setFont(QFont("JetBrains Mono", 13));
         changePalette();
 
         updateLineNumberAreaWidth(0);
@@ -49,7 +50,7 @@ int CodeEditor::lineNumberAreaWidth() {
                 ++digits;
         }
 
-        int space = fontMetrics().averageCharWidth() * 2 + //spaces around
+        int space = fontMetrics().averageCharWidth() * 2 +     //spaces around
                     fontMetrics().averageCharWidth() * digits; //numbers
 
         return space;

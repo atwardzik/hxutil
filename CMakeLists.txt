@@ -40,9 +40,10 @@ qt_add_executable(hxutil
         include/code_editor.h
         src/code_editor.cpp
         include/color_palette.h
+        src/highlighter/ARMv6_ASM_highlighter.cpp
+        include/open_files_list.h
         #        src/binary_file_handler.cppm
         ${app_icon_macos}
-        src/highlighter/ARMv6_ASM_highlighter.cpp
 )
 
 #file(GLOB_RECURSE MODULE_INTERFACE_UNITS "*.cppm")

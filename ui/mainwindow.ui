@@ -32,8 +32,11 @@
       </property>
       <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>1</number>
+        </property>
         <item>
-         <widget class="QListWidget" name="listWidget">
+         <widget class="OpenFilesList" name="listWidget">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -45,6 +48,9 @@
             <width>16777215</width>
             <height>25</height>
            </size>
+          </property>
+          <property name="autoScrollMargin">
+           <number>15</number>
           </property>
          </widget>
         </item>
@@ -111,7 +117,22 @@ msg:	.ascii &quot;Hello World\n&quot;
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="page_2"/>
+          <widget class="QWidget" name="page_2">
+           <layout class="QGridLayout" name="gridLayout_2">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+           </layout>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -320,6 +341,11 @@ height: 10px;</string>
    <class>CodeEditor</class>
    <extends>QPlainTextEdit</extends>
    <header location="global">code_editor.h</header>
+  </customwidget>
+  <customwidget>
+   <class>OpenFilesList</class>
+   <extends>QListWidget</extends>
+   <header location="global">open_files_list.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
