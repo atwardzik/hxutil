@@ -25,19 +25,21 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
         setupTextWindows();
 
-        this->ui->stackedWidget->removeWidget(this->ui->page_2);
+        tabWidget = this->ui->tabWidget;
 
         //TODO: this must be added dynamically as the user opens the file
-        CodeEditor *secondPageEditor = new CodeEditor(this->ui->stackedWidget);
-        this->ui->stackedWidget->addWidget(secondPageEditor);
+        CodeEditor *secondPageEditor = new CodeEditor(this);
+        tabWidget->setTabsClosable(true);
+        tabWidget->removeTab(1);
 
 
-        QListWidget *listView = this->ui->listWidget;
-        listView->setFlow(QListView::LeftToRight);
-        new QListWidgetItem(tr("Page 1"), listView);
-        new QListWidgetItem(tr("Page 2"), listView);
-        new QListWidgetItem(tr("Page 3"), listView);
-        connect(listView, &QListWidget::currentRowChanged, this->ui->stackedWidget, &QStackedWidget::setCurrentIndex);
+        QWidget *tab1 = new QWidget();
+        QVBoxLayout *tab1Layout = new QVBoxLayout(tab1);
+        tab1Layout->setContentsMargins(0, 0, 0, 0);
+        tab1Layout->addWidget(secondPageEditor);
+        tabWidget->addTab(tab1, "File 2");
+
+        connect(tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::onTabCloseRequested);
 }
 
 MainWindow::~MainWindow() {

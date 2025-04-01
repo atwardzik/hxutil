@@ -15,6 +15,9 @@
 #include <qwindowdefs.h>
 #include <QComboBox>
 #include <QListWidget>
+#include <QListView>
+#include <QStringListModel>
+#include <QStandardItemModel>
 
 #include <vector>
 
@@ -22,6 +25,7 @@
 #include "highlighter.h"
 #include "code_editor.h"
 #include "open_files_list.h"
+#include "../ui/ui_mainwindow.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -55,6 +59,11 @@ private slots:
 
         void on_actionCompileButton_triggered(bool checked);
 
+        void onTabCloseRequested(int index) {
+                qDebug() << "Requested removal: " << index;
+                tabWidget->removeTab(index);
+        }
+
 protected:
         void changeEvent(QEvent *) override;
 
@@ -77,6 +86,7 @@ private:
         QMenu *preferences;
         QMenuBar *menuBar;
         QAction *menuAction;
+        QTabWidget *tabWidget;
         CodeEditor *codeEditor;
         Highlighter *highlighter = nullptr; //todo: should be property of codeEditor!!!
         QLabel *modeLabel;
