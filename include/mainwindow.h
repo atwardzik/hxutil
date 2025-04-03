@@ -2,30 +2,22 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QPlainTextEdit>
-#include <QFileDialog>
 #include <QMessageBox>
 #include <QLabel>
-#include <QMenuBar>
 #include <QMenu>
 #include <QAction>
 #include <QToolButton>
 #include <QShortcut>
-#include <QCursor>
-#include <qwindowdefs.h>
 #include <QComboBox>
-#include <QListWidget>
-#include <QListView>
-#include <QStringListModel>
-#include <QStandardItemModel>
+#include <QSettings>
 
-#include <vector>
 
 #include "file_modifier.h"
 #include "highlighter.h"
 #include "code_editor.h"
 #include "../ui/ui_mainwindow.h"
 #include "lanugage_specifics.h"
+#include "settings.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -54,7 +46,6 @@ private slots:
         void on_actionCompileButton_triggered(bool checked);
 
         void onTabCloseRequested(int index) {
-                qDebug() << "Requested removal: " << index;
                 QWidget *widget = tabWidget->widget(index);
                 tabWidget->removeTab(index);
                 delete widget;
@@ -89,10 +80,10 @@ private:
         QLabel *modeLabel;
 
         void showPreferencesDialog() {
-                QDialog dialog(this);
-                dialog.setWindowTitle("Tutaj dokona się akt stworzenia!");
-                dialog.exec();
-                // QMessageBox::information(this, "Preferences", "Open Preferences Dialog Here!");
+                QSettings settings("Artur Twardzik", "hxutil", this);
+
+                Settings *settingsWindow = new Settings(this);
+                settingsWindow->exec();
         }
 };
 #endif // MAINWINDOW_H

@@ -30,21 +30,17 @@ qt_standard_project_setup()
 ### SOURCES ###
 qt_add_executable(hxutil
         MACOSX_BUNDLE
-        src/main.cpp
-        src/mainwindow.cpp
-        include/mainwindow.h
-        ui/mainwindow.ui
-        include/file_modifier.h
-        include/highlighter.h
-        src/highlighter/highlighter.cpp
-        include/code_editor.h
-        src/code_editor.cpp
+        ${app_icon_macos}
         include/color_palette.h
         include/lanugage_specifics.h
+        src/main.cpp
+        src/mainwindow.cpp include/mainwindow.h ui/mainwindow.ui
+        src/settings.cpp include/settings.h ui/settings.ui
+        src/code_editor.cpp include/code_editor.h
+        src/file_modifier.cpp include/file_modifier.h
+        src/highlighter/highlighter.cpp include/highlighter.h
         src/highlighter/ARMv6_ASM_highlighter.cpp
         #        src/binary_file_handler.cppm
-        ${app_icon_macos}
-        src/file_modifier.cpp
 )
 
 #file(GLOB_RECURSE MODULE_INTERFACE_UNITS "*.cppm")
