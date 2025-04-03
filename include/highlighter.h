@@ -27,6 +27,10 @@ protected:
 
         void addHighlightingRule(const QTextCharFormat &format, const QString &pattern);
 
+        void highlightSyntax(const QString &text);
+
+        void highlightComments(const QString &text);
+
         QRegularExpression commentStartExpression;
         QRegularExpression commentEndExpression;
         QTextCharFormat multiLineCommentFormat;

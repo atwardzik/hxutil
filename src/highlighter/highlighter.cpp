@@ -14,7 +14,7 @@ void Highlighter::addHighlightingRule(const QTextCharFormat &format, const QStri
 }
 
 
-void Highlighter::highlightBlock(const QString &text) {
+void Highlighter::highlightSyntax(const QString &text) {
         for (const HighlightingRule &rule: std::as_const(highlightingRules)) {
                 QRegularExpressionMatchIterator matchIterator = rule.pattern.globalMatch(text);
                 while (matchIterator.hasNext()) {
@@ -22,9 +22,9 @@ void Highlighter::highlightBlock(const QString &text) {
                         setFormat(match.capturedStart(), match.capturedLength(), rule.format);
                 }
         }
+}
 
-        setCurrentBlockState(0);
-
+void Highlighter::highlightComments(const QString &text) {
         int startIndex = 0;
         if (previousBlockState() != 1) {
                 startIndex = text.indexOf(commentStartExpression);
@@ -39,10 +39,17 @@ void Highlighter::highlightBlock(const QString &text) {
                         commentLength = text.length() - startIndex;
                 }
                 else {
-                        commentLength = endIndex - startIndex
-                                        + match.capturedLength();
+                        commentLength = endIndex - startIndex + match.capturedLength();
                 }
                 setFormat(startIndex, commentLength, multiLineCommentFormat);
                 startIndex = text.indexOf(commentStartExpression, startIndex + commentLength);
         }
+}
+
+void Highlighter::highlightBlock(const QString &text) {
+        highlightSyntax(text);
+
+        setCurrentBlockState(0);
+
+        highlightComments(text);
 }
