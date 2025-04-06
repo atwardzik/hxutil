@@ -198,19 +198,23 @@ void MainWindow::on_actionCompileButton_triggered(bool checked) {
         compilation.start(command, params);
         compilation.waitForFinished(); // sets current thread to sleep and waits for compilation to end
         QString output(compilation.readAllStandardOutput());
-
-        std::string s = output.toStdString(); // TODO: fix it, it's empty
+        QString errors(compilation.readAllStandardError());
 
         QDialog *dialog = new QDialog(this);
         dialog->setWindowTitle("Compilation result");
         QVBoxLayout *layout = new QVBoxLayout;
-        QLabel *label = new QLabel(output);
+        QLabel *label = new QLabel(output + errors);
         layout->addWidget(label);
         dialog->setLayout(layout);
         dialog->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
-        dialog->exec();
+        dialog->show();
 
-        const QString contents = QString::fromStdString(readPlainText("debug_file.o", std::ios::in | std::ios::binary));
-        ui->textBrowserDown->setText(contents);
+        try {
+                QString contents = QString::fromStdString(
+                        readPlainText("debug_file.o", std::ios::in | std::ios::binary));
+                ui->textBrowserDown->setText(contents);
+        } catch (const std::runtime_error &e) {
+                qDebug() << "[!] file could not be opened due to compilation error";
+        }
 }
