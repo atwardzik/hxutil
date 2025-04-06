@@ -12,6 +12,9 @@
 #include <cstdint>
 #include <exception>
 #include <QFileDialog>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 #include "lanugage_specifics.h"
 
@@ -27,5 +30,7 @@ std::string bytesToPrintable(std::vector<uint8_t> &hex_bytes);
 std::string readPlainText(const std::string &filename, std::ios_base::openmode mode = std::ios::in);
 
 OpenFile openFileGetPlaintext(Language language);
+
+void savePlaintextFile(const std::string &filename, const std::string &data);
 
 #endif //HEX_MOD_H

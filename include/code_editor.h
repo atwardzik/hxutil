@@ -15,6 +15,8 @@
 
 #include "color_palette.h"
 
+// todo: https://doc.qt.io/qt-6/qtwidgets-tools-customcompleter-example.html
+
 class CodeEditor : public QPlainTextEdit {
         Q_OBJECT
 

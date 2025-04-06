@@ -10,7 +10,7 @@
 #include <QShortcut>
 #include <QComboBox>
 #include <QSettings>
-
+#include <QProcess>
 
 #include "file_modifier.h"
 #include "highlighter.h"
@@ -78,6 +78,8 @@ private:
         CodeEditor *codeEditor;
         Highlighter *highlighter = nullptr; //todo: should be property of codeEditor!!!
         QLabel *modeLabel;
+
+        QSettings settings;
 
         void showPreferencesDialog() {
                 QSettings settings("Artur Twardzik", "hxutil", this);

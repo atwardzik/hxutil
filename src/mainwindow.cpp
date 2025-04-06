@@ -184,7 +184,33 @@ void MainWindow::on_actionHEXOpenFile_triggered(bool checked) {
 
 
 void MainWindow::on_actionCompileButton_triggered(bool checked) {
-        QString contents = ui->plainTextEdit->toPlainText();
+        savePlaintextFile("debug_file.s", ui->plainTextEdit->toPlainText().toStdString());
 
+        const QString command = settings.value("compiler_path").toString();
+
+        QStringList params;
+        params << "-g" << "-v"
+                        << "debug_file.s"
+                        << "-o"
+                        << "debug_file.o";
+
+        QProcess compilation;
+        compilation.start(command, params);
+        compilation.waitForFinished(); // sets current thread to sleep and waits for compilation to end
+        QString output(compilation.readAllStandardOutput());
+
+        std::string s = output.toStdString(); // TODO: fix it, it's empty
+
+        QDialog *dialog = new QDialog(this);
+        dialog->setWindowTitle("Compilation result");
+        QVBoxLayout *layout = new QVBoxLayout;
+        QLabel *label = new QLabel(output);
+        layout->addWidget(label);
+        dialog->setLayout(layout);
+        dialog->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+
+        dialog->exec();
+
+        const QString contents = QString::fromStdString(readPlainText("debug_file.o", std::ios::in | std::ios::binary));
         ui->textBrowserDown->setText(contents);
 }

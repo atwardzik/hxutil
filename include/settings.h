@@ -23,15 +23,17 @@ public:
 
 private slots:
         void ok_button_clicked() {
-                QString value = text_box->text();
+                QString value = compiler_path->text();
 
-                settings.setValue("labelownia", value);
+                settings.setValue("compiler_path", value);
         }
+
+        void on_buttonBox_accepted();
 
 private:
         Ui::Settings *ui;
         QSettings settings;
-        QLineEdit *text_box;
+        QLineEdit *compiler_path;
 };
 
 #endif // SETTINGS_H

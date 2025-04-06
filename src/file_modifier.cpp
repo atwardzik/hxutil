@@ -120,3 +120,9 @@ OpenFile openFileGetPlaintext(Language language) {
                 text
         };
 }
+
+void savePlaintextFile(const std::string &filename, const std::string &data) {
+        std::ofstream file(filename);
+        file << data;
+        file.close();
+}

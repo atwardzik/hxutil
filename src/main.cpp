@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
         //integrate rust formatter: https://parallel-rust-cpp.github.io/cpp_abi.html
         QApplication a(argc, argv);
         QCoreApplication::setOrganizationName("Artur Twardzik");
-        QCoreApplication::setOrganizationDomain("https://github.com/atwardzik/hxutil");
+        QCoreApplication::setOrganizationDomain("github.com/atwardzik/hxutil");
         QCoreApplication::setApplicationName("hxutil");
         MainWindow w;
         QPoint center = w.windowHandle()->screen()->availableGeometry().center();

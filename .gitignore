@@ -4,3 +4,4 @@ xbuild
 .qt
 .DS_Store
 icon
+debug_file.*
