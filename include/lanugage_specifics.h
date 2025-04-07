@@ -10,6 +10,7 @@ enum class Language {
         x86_ASM,
         C,
         HEX,
+        None,
 };
 
 // TODO: add keywords, directives, etc

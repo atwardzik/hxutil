@@ -63,9 +63,9 @@ private:
 
         void setupTextWindows();
 
-        void changePalette();
+        void setupTabWidget();
 
-        void setHighlighter(QPlainTextEdit *parent, Language language);
+        void changePalette();
 
         void createTab(CodeEditor *editor, const QIcon &icon, const QString &name);
 
@@ -76,7 +76,6 @@ private:
         QAction *menuAction;
         QTabWidget *tabWidget;
         CodeEditor *codeEditor;
-        Highlighter *highlighter = nullptr; //todo: should be property of codeEditor!!!
         QLabel *modeLabel;
 
         QSettings settings;

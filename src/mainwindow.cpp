@@ -1,12 +1,8 @@
 #include "mainwindow.h"
-#include "mainwindow.h"
-#include "mainwindow.h"
 #include "../ui/ui_mainwindow.h"
 
 #include <iostream>
 #include <fstream>
-#include <QPushButton>
-#include <sstream>
 // import binary_file_handler;
 
 
@@ -25,21 +21,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
         setupTextWindows();
 
-        tabWidget = this->ui->tabWidget;
-
-        tabWidget->setTabsClosable(true);
-        tabWidget->setUsesScrollButtons(true);
-        tabWidget->removeTab(1);
-        tabWidget->setElideMode(Qt::TextElideMode::ElideNone);
-        ///////////////////////////////////////////////
-        /// THIS LINE IS VERY IMPORTANT, DUE TO THE  //
-        ///    MACOS BUG (TRUNCATING MIDDLE TEXT)    //
-        ///    FIX IN FUTURE VERSIONS OF SYSTEM      //
-        tabWidget->setIconSize(QSize(10, 10)); //
-        ///////////////////////////////////////////////
-        ///////////////////////////////////////////////
-
-        connect(tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::onTabCloseRequested);
+        setupTabWidget();
 }
 
 MainWindow::~MainWindow() {
@@ -74,11 +56,28 @@ void MainWindow::setupMainMenu() {
 
 void MainWindow::setupTextWindows() {
         codeEditor = ui->plainTextEdit;
-        codeEditor->setLineWrapMode(QPlainTextEdit::NoWrap);
+        new ARMv6_ASM_Highlighter(codeEditor->document());
+
         ui->textBrowserUp->setLineWrapMode(QTextEdit::NoWrap);
         ui->textBrowserDown->setLineWrapMode(QTextEdit::NoWrap);
+}
 
-        setHighlighter(codeEditor, Language::ARMv6_ASM);
+void MainWindow::setupTabWidget() {
+        tabWidget = this->ui->tabWidget;
+
+        tabWidget->setTabsClosable(true);
+        tabWidget->setUsesScrollButtons(true);
+        tabWidget->removeTab(1);
+        tabWidget->setElideMode(Qt::TextElideMode::ElideNone);
+        ///////////////////////////////////////////////
+        /// THIS LINE IS VERY IMPORTANT, DUE TO THE  //
+        ///    MACOS BUG (TRUNCATING MIDDLE TEXT)    //
+        ///    FIX IN FUTURE VERSIONS OF SYSTEM      //
+        tabWidget->setIconSize(QSize(10, 10)); //
+        ///////////////////////////////////////////////
+        ///////////////////////////////////////////////
+
+        connect(tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::onTabCloseRequested);
 }
 
 
@@ -131,23 +130,6 @@ void MainWindow::closeEvent(QCloseEvent *event) {
         }
 }
 
-void MainWindow::setHighlighter(QPlainTextEdit *parent, Language language) {
-        // delete highlighter;
-
-        switch (language) {
-                        using enum Language;
-                case ARMv6_ASM:
-                        new ARMv6_ASM_Highlighter(parent->document());
-                        break;
-                case x86_ASM:
-                case C:
-                case HEX:
-                default:
-                        // highlighter = nullptr;
-                        break;
-        }
-}
-
 void MainWindow::createTab(CodeEditor *editor, const QIcon &icon, const QString &name) {
         QWidget *tab = new QWidget();
         QVBoxLayout *tabLayout = new QVBoxLayout(tab);
@@ -159,13 +141,22 @@ void MainWindow::createTab(CodeEditor *editor, const QIcon &icon, const QString 
 }
 
 void MainWindow::on_actionAssemblyOpenFile_triggered(bool checked) {
-        const OpenFile file = openFileGetPlaintext(Language::ARMv6_ASM);
+        const auto [fileName, plaintext] = openFileGetPlaintext(Language::ARMv6_ASM);
 
-        CodeEditor *editor = new CodeEditor(this);
-        editor->setPlainText(file.plaintext);
-        setHighlighter(editor, Language::ARMv6_ASM);
+        Language assembly_dialect = {};
+        if (const QString fileExtension = QFileInfo(fileName).suffix();
+                fileExtension == "s" || fileExtension == "S") {
+                assembly_dialect = Language::ARMv6_ASM;
+        }
+        else if (fileExtension == "asm") {
+                assembly_dialect = Language::x86_ASM;
+        }
 
-        createTab(editor, QIcon::fromTheme(QIcon::ThemeIcon::Computer), file.fileName);
+
+        CodeEditor *editor = new CodeEditor(this, assembly_dialect);
+        editor->setPlainText(plaintext);
+
+        createTab(editor, QIcon::fromTheme(QIcon::ThemeIcon::Computer), fileName);
         modeLabel->setText("Mode: Assembly → HEX");
 }
 

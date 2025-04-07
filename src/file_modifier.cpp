@@ -81,7 +81,7 @@ static QString getFileFilter(Language language) {
         switch (language) {
                         using enum Language;
                 case ARMv6_ASM:
-                        filter = "Assembly files (*.s *.asm)";
+                        filter = "Assembly files (*.s *.S *.asm)";
                         break;
                 case HEX:
                         filter = "Object files (*.o *.obj *.elf *.so *.out)";

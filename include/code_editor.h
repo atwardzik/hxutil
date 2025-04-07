@@ -14,6 +14,8 @@
 #include <QFont>
 
 #include "color_palette.h"
+#include "lanugage_specifics.h"
+#include "highlighter.h"
 
 // todo: https://doc.qt.io/qt-6/qtwidgets-tools-customcompleter-example.html
 
@@ -21,7 +23,7 @@ class CodeEditor : public QPlainTextEdit {
         Q_OBJECT
 
 public:
-        explicit CodeEditor(QWidget *parent = nullptr);
+        explicit CodeEditor(QWidget *parent = nullptr, Language language = Language::None);
 
         void lineNumberAreaPaintEvent(QPaintEvent *event);
 
@@ -41,6 +43,8 @@ private slots:
 
 private:
         void changePalette();
+
+        void setHighlighter(Language language) const;
 
 private:
         QWidget *lineNumberArea;

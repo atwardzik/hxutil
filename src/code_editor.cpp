@@ -4,9 +4,11 @@
 
 #include "code_editor.h"
 
-
-CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent) {
+CodeEditor::CodeEditor(QWidget *parent, Language language) : QPlainTextEdit(parent) {
         lineNumberArea = new LineNumberArea(this);
+
+        this->setLineWrapMode(QPlainTextEdit::NoWrap);
+
 
         connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
         connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
@@ -17,6 +19,22 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent) {
 
         updateLineNumberAreaWidth(0);
         highlightCurrentLine();
+        setHighlighter(language);
+}
+
+void CodeEditor::setHighlighter(Language language) const {
+        switch (language) {
+                        using enum Language;
+                case ARMv6_ASM:
+                        new ARMv6_ASM_Highlighter(this->document());
+                        break;
+                case x86_ASM:
+                case C:
+                case HEX:
+                case None:
+                default:
+                        break;
+        }
 }
 
 void CodeEditor::changePalette() {
