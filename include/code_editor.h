@@ -12,10 +12,18 @@
 #include <QTextBlock>
 #include <QApplication>
 #include <QFont>
+#include <QLabel>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QLineEdit>
+#include <Qstring>
+#include <QFormLayout>
+#include <QPushButton>
 
 #include "color_palette.h"
 #include "lanugage_specifics.h"
 #include "highlighter.h"
+#include "file_modifier.h"
 
 // todo: https://doc.qt.io/qt-6/qtwidgets-tools-customcompleter-example.html
 
@@ -23,7 +31,9 @@ class CodeEditor : public QPlainTextEdit {
         Q_OBJECT
 
 public:
-        explicit CodeEditor(QWidget *parent = nullptr, Language language = Language::None);
+        CodeEditor(QWidget *parent = nullptr, const QString &fileName = "", Language language = Language::None);
+
+        QString saveFile();
 
         void lineNumberAreaPaintEvent(QPaintEvent *event);
 
@@ -50,6 +60,8 @@ private:
         QWidget *lineNumberArea;
 
         QColor lineColor;
+
+        QString fileName;
 };
 
 

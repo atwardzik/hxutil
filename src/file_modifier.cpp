@@ -116,7 +116,7 @@ OpenFile openFileGetPlaintext(Language language) {
                         break;
                 case None:
                 default:
-                        break
+                        break;
         }
 
         return {

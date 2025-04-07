@@ -144,7 +144,7 @@ void MainWindow::on_actionAssemblyOpenFile_triggered(bool checked) {
         const auto [fileName, plaintext] = openFileGetPlaintext(Language::Generic_ASM);
 
         const Language assembly_dialect = detectAssemblyDialect(fileName);
-        CodeEditor *editor = new CodeEditor(this, assembly_dialect);
+        CodeEditor *editor = new CodeEditor(this, fileName, assembly_dialect);
         editor->setPlainText(plaintext);
 
         createTab(editor, QIcon::fromTheme(QIcon::ThemeIcon::Computer), fileName);
@@ -166,15 +166,15 @@ void MainWindow::on_actionHEXOpenFile_triggered(bool checked) {
 
 
 void MainWindow::on_actionCompileButton_triggered(bool checked) {
-        savePlaintextFile("debug_file.s", ui->plainTextEdit->toPlainText().toStdString());
+        const QString plainTextFile = ui->plainTextEdit->saveFile();
+        //TODO: REGEX MATCH OUTPUT FILE NAME, SINGLE DOT EXTENSION
 
         const QString command = settings.value("compiler_path").toString();
 
         QStringList params;
         params << "-g" << "-v"
-                        << "debug_file.s"
-                        << "-o"
-                        << "debug_file.o";
+                        << plainTextFile
+                        << "-o" << "debug_file.o";
 
         QProcess compilation;
         compilation.start(command, params);

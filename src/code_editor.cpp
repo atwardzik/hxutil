@@ -4,8 +4,10 @@
 
 #include "code_editor.h"
 
-CodeEditor::CodeEditor(QWidget *parent, Language language) : QPlainTextEdit(parent) {
+
+CodeEditor::CodeEditor(QWidget *parent, const QString &fileName, Language language) : QPlainTextEdit(parent) {
         lineNumberArea = new LineNumberArea(this);
+        this->fileName = fileName;
 
         this->setLineWrapMode(QPlainTextEdit::NoWrap);
 
@@ -59,6 +61,36 @@ void CodeEditor::changePalette() {
         highlightCurrentLine();
 }
 
+QString CodeEditor::saveFile() {
+        if (!fileName.isEmpty()) {
+                savePlaintextFile(fileName.toStdString(), this->toPlainText().toStdString());
+        }
+        else {
+                QDialog *dialog = new QDialog(this);
+                dialog->setWindowTitle("Save file");
+
+                QFormLayout *form = new QFormLayout;
+                QLineEdit *input = new QLineEdit;
+                form->addRow(tr("File name:"), input);
+
+                QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+                form->addRow(buttonBox);
+
+                connect(buttonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
+                connect(buttonBox, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
+
+                dialog->setLayout(form);
+
+                int dialogCode = dialog->exec();
+
+                if (dialogCode == QDialog::Accepted) {
+                        fileName = input->text();
+                        savePlaintextFile(fileName.toStdString(), this->toPlainText().toStdString());
+                }
+        }
+
+        return fileName;
+}
 
 int CodeEditor::lineNumberAreaWidth() {
         int digits = 1;
