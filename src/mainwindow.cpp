@@ -141,18 +141,9 @@ void MainWindow::createTab(CodeEditor *editor, const QIcon &icon, const QString 
 }
 
 void MainWindow::on_actionAssemblyOpenFile_triggered(bool checked) {
-        const auto [fileName, plaintext] = openFileGetPlaintext(Language::ARMv6_ASM);
+        const auto [fileName, plaintext] = openFileGetPlaintext(Language::Generic_ASM);
 
-        Language assembly_dialect = {};
-        if (const QString fileExtension = QFileInfo(fileName).suffix();
-                fileExtension == "s" || fileExtension == "S") {
-                assembly_dialect = Language::ARMv6_ASM;
-        }
-        else if (fileExtension == "asm") {
-                assembly_dialect = Language::x86_ASM;
-        }
-
-
+        const Language assembly_dialect = detectAssemblyDialect(fileName);
         CodeEditor *editor = new CodeEditor(this, assembly_dialect);
         editor->setPlainText(plaintext);
 

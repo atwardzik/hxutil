@@ -80,7 +80,7 @@ static QString getFileFilter(Language language) {
 
         switch (language) {
                         using enum Language;
-                case ARMv6_ASM:
+                case Generic_ASM:
                         filter = "Assembly files (*.s *.S *.asm)";
                         break;
                 case HEX:
@@ -100,10 +100,11 @@ OpenFile openFileGetPlaintext(Language language) {
                 return {};
         }
 
-        QString text;
+        QString text = "";
 
         switch (language) {
                         using enum Language;
+                case Generic_ASM:
                 case ARMv6_ASM:
                 case x86_ASM:
                 case C:
@@ -113,6 +114,9 @@ OpenFile openFileGetPlaintext(Language language) {
                         text = QString::fromStdString(
                                 readPlainText(fileName.toStdString(), std::ios::in | std::ios::binary));
                         break;
+                case None:
+                default:
+                        break
         }
 
         return {
