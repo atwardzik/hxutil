@@ -22,6 +22,15 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         setupTextWindows();
 
         setupTabWidget();
+
+        ui->file_text_splitter->setSizes({0, 65535});
+        ui->command_tab_splitter->setSizes({65535, 0});
+
+        // auto *push_btn = new QPushButton(this->ui->centralwidget);
+
+        // connect(push_btn, &QPushButton::clicked, this, [=](bool checked) {
+        // this->ui->treeView->setMaximumWidth(100);
+        // });
 }
 
 MainWindow::~MainWindow() {
@@ -166,7 +175,7 @@ void MainWindow::on_actionHEXOpenFile_triggered(bool checked) {
 
 
 void MainWindow::on_actionCompileButton_triggered(bool checked) {
-        const QString plainTextFile = ui->plainTextEdit->saveFile();
+        const QString plainTextFile = ui->plainTextEdit->saveFile(); //TODO: save all opened files
         //TODO: REGEX MATCH OUTPUT FILE NAME, SINGLE DOT EXTENSION
 
         const QString command = settings.value("compiler_path").toString();

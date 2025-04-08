@@ -61,6 +61,8 @@ void CodeEditor::changePalette() {
         highlightCurrentLine();
 }
 
+//! 
+//! @return file name of a saved file
 QString CodeEditor::saveFile() {
         if (!fileName.isEmpty()) {
                 savePlaintextFile(fileName.toStdString(), this->toPlainText().toStdString());
