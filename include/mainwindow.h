@@ -77,6 +77,7 @@ private:
         QTabWidget *tabWidget;
         CodeEditor *codeEditor;
         QLabel *modeLabel;
+        QTextEdit *executedCommands;
 
         QSettings settings;
 

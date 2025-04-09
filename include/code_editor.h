@@ -16,7 +16,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QLineEdit>
-#include <Qstring>
+#include <QString>
 #include <QFormLayout>
 #include <QPushButton>
 
@@ -31,7 +31,8 @@ class CodeEditor : public QPlainTextEdit {
         Q_OBJECT
 
 public:
-        CodeEditor(QWidget *parent = nullptr, const QString &fileName = "", Language language = Language::None);
+        explicit CodeEditor(QWidget *parent = nullptr, const QString &fileName = "", Language language = Language::None
+        );
 
         QString saveFile();
 

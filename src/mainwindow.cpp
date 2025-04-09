@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <QFileSystemModel>
 // import binary_file_handler;
 
 
@@ -13,8 +14,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
         setWindowTitle("hxutil");
 
-        changePalette();
-
         setupInfoStrings();
 
         setupMainMenu();
@@ -23,14 +22,41 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
         setupTabWidget();
 
+        //fileTreeView
+        QFileSystemModel *model = new QFileSystemModel;
+        model->setRootPath(QDir::currentPath());
+        ui->fileTreeView->setModel(model);
+        qDebug() << QDir::currentPath();
+
+        // command_tab
         ui->file_text_splitter->setSizes({0, 65535});
         ui->command_tab_splitter->setSizes({65535, 0});
+        QToolButton *btn = new QToolButton;
+        btn->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ListRemove));
+        btn->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonFollowStyle);
+        btn->setIconSize(QSize(13, 16));
+        ui->commandTabWidget->setCornerWidget(btn, Qt::TopRightCorner);
 
-        // auto *push_btn = new QPushButton(this->ui->centralwidget);
 
-        // connect(push_btn, &QPushButton::clicked, this, [=](bool checked) {
-        // this->ui->treeView->setMaximumWidth(100);
-        // });
+        connect(btn, &QToolButton::clicked, this, [this](bool checked) {
+                ui->command_tab_splitter->setSizes({65535, 0});
+        });
+
+        //commands
+
+        QGridLayout *layout = new QGridLayout(ui->command_tab);
+        executedCommands = new QTextEdit(ui->command_tab);
+        executedCommands->setReadOnly(true);
+        executedCommands->setLineWrapMode(QTextEdit::NoWrap);
+
+        layout->addWidget(executedCommands);
+        layout->setContentsMargins(0, 0, 0, 0);
+        ui->command_tab->setLayout(layout);
+
+        //terminal
+
+
+        changePalette();
 }
 
 MainWindow::~MainWindow() {
@@ -106,6 +132,8 @@ void MainWindow::changePalette() {
         palette.setColor(QPalette::Active, QPalette::Base, backgroundColor);
         ui->textBrowserUp->setPalette(palette);
         ui->textBrowserDown->setPalette(palette);
+        ui->fileTreeView->setPalette(palette);
+        executedCommands->setPalette(palette);
 }
 
 
@@ -191,15 +219,20 @@ void MainWindow::on_actionCompileButton_triggered(bool checked) {
         QString output(compilation.readAllStandardOutput());
         QString errors(compilation.readAllStandardError());
 
-        QDialog *dialog = new QDialog(this);
-        dialog->setWindowTitle("Compilation result");
-        QVBoxLayout *layout = new QVBoxLayout;
-        QLabel *label = new QLabel(output + errors);
-        layout->addWidget(label);
-        dialog->setLayout(layout);
-        dialog->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        QTextCharFormat format;
+        executedCommands->insertPlainText("Compilation ");
+        format.setFontItalic(true);
+        format.setForeground(OneDarkTheme::red);
+        executedCommands->setCurrentCharFormat(format);
+        executedCommands->insertPlainText(QDateTime::currentDateTime().toString() + "\n");
+        format.setFontItalic(false);
+        format.clearForeground();
+        executedCommands->setCurrentCharFormat(format);
+        executedCommands->append(output + errors);
 
-        dialog->show();
+        ui->commandTabWidget->setCurrentIndex(0);
+        ui->command_tab_splitter->setSizes({65535, 200});
+
 
         try {
                 QString contents = QString::fromStdString(

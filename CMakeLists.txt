@@ -5,7 +5,7 @@ project(hxutil LANGUAGES CXX)
 ### LANGUAGE STANDARDS ###
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_PREFIX_PATH "/Users/arturtwardzik/Qt/6.8.2/macos/lib/cmake")
+set(CMAKE_PREFIX_PATH "/Users/arturtwardzik/Qt/6.8.3/macos/lib/cmake")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -23,6 +23,9 @@ include_directories(${CMAKE_SOURCE_DIR} ui include src)
 link_directories(${CMAKE_SOURCE_DIR} ui include src)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+
+find_package(Qt6 6.8.3 REQUIRED COMPONENTS WebEngineWidgets)
+#target_link_libraries(hxutil PRIVATE Qt6::WebEngineWidgets)
 
 qt_standard_project_setup()
 
@@ -53,6 +56,7 @@ target_link_libraries(hxutil
         PRIVATE
         Qt::Core
         Qt::Widgets
+        Qt::WebEngineWidgets
 )
 
 include(GNUInstallDirs)

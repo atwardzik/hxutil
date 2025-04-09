@@ -231,7 +231,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
         <bool>true</bool>
        </property>
        <property name="tabsClosable">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="movable">
         <bool>true</bool>
@@ -241,12 +241,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </property>
        <widget class="QWidget" name="command_tab">
         <attribute name="title">
-         <string>Tab 1</string>
+         <string>Run</string>
         </attribute>
        </widget>
        <widget class="QWidget" name="terminal_tab">
         <attribute name="title">
-         <string>Tab 2</string>
+         <string>Terminal</string>
         </attribute>
        </widget>
       </widget>
