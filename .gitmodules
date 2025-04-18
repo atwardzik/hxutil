@@ -1,0 +1,3 @@
+[submodule "include/asmstatic"]
+	path = include/asmstatic
+	url = https://gitlab.com/atwardzik/asmstatic
