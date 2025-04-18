@@ -88,39 +88,56 @@ QString CodeEditor::getFileExtension() const {
         }
 }
 
+QString CodeEditor::getObjectFileName() {
+        QString currentExtension = getFileExtension();
+        std::string objectFileName = fileName.toStdString();
+
+        int fileExtensionPos = objectFileName.rfind(currentExtension.toStdString());
+        objectFileName.erase(objectFileName.begin() + fileExtensionPos, objectFileName.end());
+
+        objectFileName += ".o";
+
+        return QString::fromStdString(objectFileName);
+}
+
+void CodeEditor::determineFileName() {
+        if (!fileName.isEmpty()) {
+                return;
+        }
+
+        QDialog *dialog = new QDialog();
+        dialog->setWindowTitle("Save file");
+
+        QFormLayout *form = new QFormLayout;
+        QLineEdit *input = new QLineEdit;
+        form->addRow(tr("File name:"), input);
+
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+        form->addRow(buttonBox);
+
+        connect(buttonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
+        connect(buttonBox, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
+
+        dialog->setLayout(form);
+
+        int dialogCode = dialog->exec();
+
+        if (dialogCode == QDialog::Accepted) {
+                fileName = input->text();
+
+                if (!fileName.contains('.')) {
+                        fileName += getFileExtension();
+                }
+        }
+}
+
 //!
 //! @return file name of a saved file
 QString CodeEditor::saveFile() {
+        determineFileName();
+
         if (!fileName.isEmpty()) {
                 savePlaintextFile(fileName.toStdString(), this->toPlainText().toStdString());
-        }
-        else {
-                QDialog *dialog = new QDialog(this);
-                dialog->setWindowTitle("Save file");
-
-                QFormLayout *form = new QFormLayout;
-                QLineEdit *input = new QLineEdit;
-                form->addRow(tr("File name:"), input);
-
-                QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-                form->addRow(buttonBox);
-
-                connect(buttonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
-                connect(buttonBox, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
-
-                dialog->setLayout(form);
-
-                int dialogCode = dialog->exec();
-
-                if (dialogCode == QDialog::Accepted) {
-                        fileName = input->text();
-
-                        if (!fileName.contains('.')) {
-                                fileName += getFileExtension();
-                        }
-
-                        savePlaintextFile(fileName.toStdString(), this->toPlainText().toStdString());
-                }
         }
 
         return fileName;

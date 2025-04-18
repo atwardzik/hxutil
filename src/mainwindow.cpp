@@ -195,14 +195,14 @@ void MainWindow::on_actionHEXOpenFile_triggered(bool checked) {
 
 void MainWindow::on_actionCompileButton_triggered(bool checked) {
         const QString plainTextFile = ui->plainTextEdit->saveFile(); //TODO: save all opened files
-        //TODO: REGEX MATCH OUTPUT FILE NAME, SINGLE DOT EXTENSION
+        const QString objectFile = ui->plainTextEdit->getObjectFileName();
 
         const QString command = settings.value("compiler_path").toString();
 
         QStringList params;
         params << "-g" << "-v"
                         << plainTextFile
-                        << "-o" << "debug_file.o";
+                        << "-o" << objectFile;
 
         QProcess compilation;
         compilation.start(command, params);

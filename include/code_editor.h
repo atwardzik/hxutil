@@ -38,6 +38,8 @@ public:
 
         void setLanguage(Language language);
 
+        QString getObjectFileName();
+
         void lineNumberAreaPaintEvent(QPaintEvent *event);
 
         int lineNumberAreaWidth();
@@ -62,6 +64,8 @@ private:
         void setHighlighter() const;
 
         QString getFileExtension() const;
+
+        void determineFileName();
 
 private:
         QWidget *lineNumberArea;
