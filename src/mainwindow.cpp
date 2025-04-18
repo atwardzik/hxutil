@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         qDebug() << QDir::currentPath();
 
         // command_tab
-        // ui->file_text_splitter->setSizes({0, 65535});
+        ui->file_text_splitter->setSizes({0, 65535});
         ui->command_tab_splitter->setSizes({65535, 0});
         QToolButton *btn = new QToolButton;
         btn->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ListRemove));
@@ -56,10 +56,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         ui->command_tab->setLayout(layout);
 
         //terminal
-        // int t[10] = {};
-        // for (int i = 0; i < 13; ++i) {
-        //         std::cout << t[i] << " ";
-        // }
 
         changePalette();
 }
@@ -96,6 +92,7 @@ void MainWindow::setupMainMenu() {
 
 void MainWindow::setupTextWindows() {
         codeEditor = ui->plainTextEdit;
+        codeEditor->setLanguage(Language::ARMv6_ASM);
         new ARMv6_ASM_Highlighter(codeEditor->document());
 
         ui->textBrowserUp->setLineWrapMode(QTextEdit::NoWrap);

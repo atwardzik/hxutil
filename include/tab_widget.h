@@ -34,8 +34,6 @@ public:
         int addEditor(CodeEditor *editor, const QIcon &icon, const QString &label);
 
         CodeEditor *getCurrentEditor();
-
-        void saveFile();
 };
 
 #endif //TAB_H

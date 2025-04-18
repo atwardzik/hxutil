@@ -32,8 +32,6 @@ CodeEditor *TabWidget::getCurrentEditor() {
         return editors[currentIndex];
 }
 
-void TabWidget::saveFile() {}
-
 void TabWidget::onTabCloseRequested(int index) {
         if (editors.contains(index)) {
                 editors[index]->saveFile();

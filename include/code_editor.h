@@ -36,6 +36,8 @@ public:
 
         QString saveFile();
 
+        void setLanguage(Language language);
+
         void lineNumberAreaPaintEvent(QPaintEvent *event);
 
         int lineNumberAreaWidth();
@@ -52,10 +54,14 @@ private slots:
 
         void updateLineNumberArea(const QRect &, int);
 
+        void onShortcutSave();
+
 private:
         void changePalette();
 
-        void setHighlighter(Language language) const;
+        void setHighlighter() const;
+
+        QString getFileExtension() const;
 
 private:
         QWidget *lineNumberArea;
@@ -63,6 +69,8 @@ private:
         QColor lineColor;
 
         QString fileName;
+
+        Language language;
 };
 
 

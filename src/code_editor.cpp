@@ -8,6 +8,7 @@
 CodeEditor::CodeEditor(QWidget *parent, const QString &fileName, Language language) : QPlainTextEdit(parent) {
         lineNumberArea = new LineNumberArea(this);
         this->fileName = fileName;
+        this->language = language;
 
         this->setLineWrapMode(QPlainTextEdit::NoWrap);
 
@@ -16,15 +17,24 @@ CodeEditor::CodeEditor(QWidget *parent, const QString &fileName, Language langua
         connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
         connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
 
+        QAction *action = new QAction(this);
+        action->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
+        connect(action, &QAction::triggered, this, &CodeEditor::onShortcutSave);
+        this->addAction(action);
+
         this->setFont(QFont("JetBrains Mono", 13));
         changePalette();
 
         updateLineNumberAreaWidth(0);
         highlightCurrentLine();
-        setHighlighter(language);
+        setHighlighter();
 }
 
-void CodeEditor::setHighlighter(Language language) const {
+void CodeEditor::setLanguage(const Language language) {
+        this->language = language;
+}
+
+void CodeEditor::setHighlighter() const {
         switch (language) {
                         using enum Language;
                 case ARMv6_ASM:
@@ -61,7 +71,24 @@ void CodeEditor::changePalette() {
         highlightCurrentLine();
 }
 
-//! 
+QString CodeEditor::getFileExtension() const {
+        switch (language) {
+                        using enum Language;
+                case ARMv6_ASM:
+                        return ".s";
+                case x86_ASM:
+                        return ".asm";
+                case C:
+                        return ".c";
+                case HEX:
+                        return ".hex";
+                case None:
+                default:
+                        return "";
+        }
+}
+
+//!
 //! @return file name of a saved file
 QString CodeEditor::saveFile() {
         if (!fileName.isEmpty()) {
@@ -87,11 +114,20 @@ QString CodeEditor::saveFile() {
 
                 if (dialogCode == QDialog::Accepted) {
                         fileName = input->text();
+
+                        if (!fileName.contains('.')) {
+                                fileName += getFileExtension();
+                        }
+
                         savePlaintextFile(fileName.toStdString(), this->toPlainText().toStdString());
                 }
         }
 
         return fileName;
+}
+
+void CodeEditor::onShortcutSave() {
+        this->saveFile();
 }
 
 int CodeEditor::lineNumberAreaWidth() {

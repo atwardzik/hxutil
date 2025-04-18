@@ -45,11 +45,11 @@ qt_add_executable(hxutil
         src/mainwindow.cpp include/mainwindow.h ui/mainwindow.ui
         src/settings.cpp include/settings.h ui/settings.ui
         src/code_editor.cpp include/code_editor.h
+        include/tab_widget.h src/tab_widget.cpp
         src/file_modifier.cpp include/file_modifier.h
         src/highlighter/highlighter.cpp include/highlighter.h
         src/highlighter/ARMv6_ASM_highlighter.cpp
         include/file_viewer.h
-        include/tab_widget.h
         #        src/binary_file_handler.cppm
 )
 
