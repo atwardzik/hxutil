@@ -46,12 +46,6 @@ private slots:
 
         void on_actionCompileButton_triggered(bool checked);
 
-        void onTabCloseRequested(int index) {
-                QWidget *widget = tabWidget->widget(index);
-                tabWidget->removeTab(index);
-                delete widget;
-        }
-
 protected:
         void changeEvent(QEvent *) override;
 

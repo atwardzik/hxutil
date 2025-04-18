@@ -25,32 +25,17 @@ private:
 
         // int addTab(QWidget *widget, const QString &label);
 
+private slots:
+        void onTabCloseRequested(int index);
+
 public:
-        explicit TabWidget(QWidget *parent) : QTabWidget(parent) {}
+        explicit TabWidget(QWidget *parent);
 
-        int addEditor(CodeEditor *editor, const QIcon &icon, const QString &label) {
-                QWidget *tab = new QWidget();
-                QVBoxLayout *tabLayout = new QVBoxLayout(tab);
+        int addEditor(CodeEditor *editor, const QIcon &icon, const QString &label);
 
-                tabLayout->setContentsMargins(0, 0, 0, 0);
-                tabLayout->addWidget(editor);
+        CodeEditor *getCurrentEditor();
 
-                const int ret = this->addTab(tab, icon, label);
-                editors[ret] = editor;
-
-                return ret;
-        }
-
-
-        CodeEditor *getCurrentEditor() {
-                const int currentIndex = this->currentIndex();
-
-                if (!editors.contains(currentIndex)) {
-                        return nullptr;
-                }
-
-                return editors[currentIndex];
-        }
+        void saveFile();
 };
 
 #endif //TAB_H

@@ -116,8 +116,6 @@ void MainWindow::setupTabWidget() {
         tabWidget->setIconSize(QSize(10, 10)); //
         ///////////////////////////////////////////////
         ///////////////////////////////////////////////
-
-        connect(tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::onTabCloseRequested);
 }
 
 
