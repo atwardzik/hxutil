@@ -28,7 +28,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         // model->setRootPath(QDir::currentPath());
         FileViewerModel *model = new FileViewerModel;
         ui->fileTreeView->setModel(model);
-        qDebug() << QDir::currentPath();
 
         // command_tab
         ui->file_text_splitter->setSizes({0, 65535});
@@ -227,8 +226,19 @@ void MainWindow::on_actionCompileButton_triggered(bool checked) {
 
         try {
                 QString contents = QString::fromStdString(
-                        readPlainText("debug_file.o", std::ios::in | std::ios::binary));
+                        readPlainText(objectFile.toStdString(), std::ios::in | std::ios::binary));
                 ui->textBrowserDown->setText(contents);
+
+                QProcess disassembly;
+                QStringList params;
+                params << "-d" << objectFile;
+
+                disassembly.start("objdump", params);
+                disassembly.waitForFinished();
+                QString output(disassembly.readAllStandardOutput());
+                QString errors(disassembly.readAllStandardError());
+
+                ui->textBrowserUp->setText(output + errors);
         } catch (const std::runtime_error &e) {
                 qDebug() << "[!] file could not be opened due to compilation error";
         }
