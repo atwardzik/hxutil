@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "../ui/ui_mainwindow.h"
+#include "file_viewer.h"
 
 #include <iostream>
 #include <fstream>
@@ -23,13 +24,14 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         setupTabWidget();
 
         //fileTreeView
-        QFileSystemModel *model = new QFileSystemModel;
-        model->setRootPath(QDir::currentPath());
+        // QFileSystemModel *model = new QFileSystemModel;
+        // model->setRootPath(QDir::currentPath());
+        FileViewerModel *model = new FileViewerModel;
         ui->fileTreeView->setModel(model);
         qDebug() << QDir::currentPath();
 
         // command_tab
-        ui->file_text_splitter->setSizes({0, 65535});
+        // ui->file_text_splitter->setSizes({0, 65535});
         ui->command_tab_splitter->setSizes({65535, 0});
         QToolButton *btn = new QToolButton;
         btn->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ListRemove));
@@ -54,7 +56,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         ui->command_tab->setLayout(layout);
 
         //terminal
-
+        // int t[10] = {};
+        // for (int i = 0; i < 13; ++i) {
+        //         std::cout << t[i] << " ";
+        // }
 
         changePalette();
 }
@@ -167,15 +172,6 @@ void MainWindow::closeEvent(QCloseEvent *event) {
         }
 }
 
-void MainWindow::createTab(CodeEditor *editor, const QIcon &icon, const QString &name) {
-        QWidget *tab = new QWidget();
-        QVBoxLayout *tabLayout = new QVBoxLayout(tab);
-
-        tabLayout->setContentsMargins(0, 0, 0, 0);
-        tabLayout->addWidget(editor);
-
-        tabWidget->addTab(tab, icon, name);
-}
 
 void MainWindow::on_actionAssemblyOpenFile_triggered(bool checked) {
         const auto [fileName, plaintext] = openFileGetPlaintext(Language::Generic_ASM);
@@ -184,7 +180,7 @@ void MainWindow::on_actionAssemblyOpenFile_triggered(bool checked) {
         CodeEditor *editor = new CodeEditor(this, fileName, assembly_dialect);
         editor->setPlainText(plaintext);
 
-        createTab(editor, QIcon::fromTheme(QIcon::ThemeIcon::Computer), fileName);
+        tabWidget->addEditor(editor, QIcon::fromTheme(QIcon::ThemeIcon::Computer), fileName);
         modeLabel->setText("Mode: Assembly → HEX");
 }
 
@@ -197,7 +193,7 @@ void MainWindow::on_actionHEXOpenFile_triggered(bool checked) {
         CodeEditor *editor = new CodeEditor(this);
         editor->setPlainText(file.plaintext);
 
-        createTab(editor, QIcon::fromTheme(QIcon::ThemeIcon::DriveHarddisk), file.fileName);
+        tabWidget->addEditor(editor, QIcon::fromTheme(QIcon::ThemeIcon::DriveHarddisk), file.fileName);
         modeLabel->setText("Mode: HEX → Dump/Disassembly");
 }
 

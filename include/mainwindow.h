@@ -18,6 +18,7 @@
 #include "../ui/ui_mainwindow.h"
 #include "lanugage_specifics.h"
 #include "settings.h"
+#include "tab_widget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -67,14 +68,12 @@ private:
 
         void changePalette();
 
-        void createTab(CodeEditor *editor, const QIcon &icon, const QString &name);
-
 private:
         Ui::MainWindow *ui;
         QMenu *preferences;
         QMenuBar *menuBar;
         QAction *menuAction;
-        QTabWidget *tabWidget;
+        TabWidget *tabWidget;
         CodeEditor *codeEditor;
         QLabel *modeLabel;
         QTextEdit *executedCommands;

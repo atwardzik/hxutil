@@ -49,6 +49,7 @@ qt_add_executable(hxutil
         src/highlighter/highlighter.cpp include/highlighter.h
         src/highlighter/ARMv6_ASM_highlighter.cpp
         include/file_viewer.h
+        include/tab_widget.h
         #        src/binary_file_handler.cppm
 )
 

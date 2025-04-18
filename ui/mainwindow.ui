@@ -85,7 +85,7 @@
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
-        <widget class="QTabWidget" name="tabWidget">
+        <widget class="TabWidget" name="tabWidget">
          <property name="styleSheet">
           <string notr="true"/>
          </property>
@@ -412,6 +412,12 @@ height: 10px;</string>
    <class>CodeEditor</class>
    <extends>QPlainTextEdit</extends>
    <header location="global">code_editor.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TabWidget</class>
+   <extends>QTabWidget</extends>
+   <header location="global">tab_widget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
