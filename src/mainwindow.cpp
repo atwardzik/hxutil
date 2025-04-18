@@ -19,9 +19,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
         setupMainMenu();
 
-        setupTextWindows();
-
         setupTabWidget();
+
+        setupTextWindows();
 
         //fileTreeView
         // QFileSystemModel *model = new QFileSystemModel;
@@ -108,9 +108,10 @@ void MainWindow::setupMainMenu() {
 }
 
 void MainWindow::setupTextWindows() {
-        codeEditor = ui->plainTextEdit;
-        codeEditor->setLanguage(Language::ARMv6_ASM);
-        new ARMv6_ASM_Highlighter(codeEditor->document());
+        CodeEditor *defaultEditor = new CodeEditor(this, "", Language::ARMv6_ASM);
+        defaultEditor->setPlainText(ui->plainTextEdit->toPlainText());
+        tabWidget->removeTab(0);
+        tabWidget->addEditor(defaultEditor, QIcon::fromTheme(QIcon::ThemeIcon::Computer), "example");
 
         ui->textBrowserUp->setLineWrapMode(QTextEdit::NoWrap);
         ui->textBrowserDown->setLineWrapMode(QTextEdit::NoWrap);
