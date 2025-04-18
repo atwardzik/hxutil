@@ -22,6 +22,14 @@ set(MACOSX_BUNDLE_ICON_FILE icon.icns)
 set(app_icon_macos "${CMAKE_SOURCE_DIR}/Contents/Resources/icon.icns")
 set_source_files_properties(${app_icon_macos} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 
+set(icons_resource_files
+        "icons/hammer.png"
+        "icons/wand.png"
+        "icons/debug.png"
+        "icons/cpu.png"
+        "icons/cli.png"
+)
+
 
 ################################# INCLUDES #################################
 include_directories(${CMAKE_SOURCE_DIR} ui include src)
@@ -87,6 +95,14 @@ target_link_libraries(hxutil PRIVATE ASMformatter_lib ${CMAKE_DL_LIBS} -fno-omit
 
 
 ################################# QT #################################
+
+qt_add_resources(hxutil "icon"
+        PREFIX
+        "/"
+        FILES
+        ${icons_resource_files}
+)
+
 target_link_libraries(hxutil
         PRIVATE
         Qt::Core

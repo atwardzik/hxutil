@@ -3,6 +3,7 @@
 //
 
 #include "code_editor.h"
+#include "ASMstatic.h"
 
 
 CodeEditor::CodeEditor(QWidget *parent, const QString &fileName, Language language) : QPlainTextEdit(parent) {
@@ -46,6 +47,18 @@ void CodeEditor::setHighlighter() const {
                 case None:
                 default:
                         break;
+        }
+}
+
+void CodeEditor::formatCode() {
+        if (language == Language::ARMv6_ASM) {
+                QString plainText = this->document()->toPlainText();
+
+                std::unique_ptr<char> formatted_text(format_arm_asm_code(
+                        plainText.toStdString().c_str(), plainText.length()));
+                std::string formatted_text_str = formatted_text.get();
+
+                this->document()->setPlainText(QString::fromStdString(formatted_text_str));
         }
 }
 

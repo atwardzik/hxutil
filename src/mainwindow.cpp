@@ -87,6 +87,24 @@ void MainWindow::setupMainMenu() {
         quitAction->setShortcut(QKeySequence::Quit);
         connect(quitAction, &QAction::triggered, this, &QApplication::quit);
         actionMenu->addAction(quitAction);
+
+
+        QAction *compileAction = new QAction("Compile", this);
+        compileAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_R));
+        connect(compileAction, &QAction::triggered, this, &MainWindow::on_actionCompileButton_triggered);
+        compileAction->setIcon(createColoredIcon(":/icons/hammer.png", UtilColors::iconColor));
+        ui->toolBar->addAction(compileAction);
+
+        QAction *formatterAction = new QAction("Format code", this);
+        formatterAction->setShortcut(QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_L));
+        connect(formatterAction, &QAction::triggered, this, [this]() {
+                CodeEditor *editor = this->tabWidget->getCurrentEditor();
+                if (editor) {
+                        editor->formatCode();
+                }
+        });
+        formatterAction->setIcon(createColoredIcon(":/icons/wand.png", UtilColors::iconColor));
+        ui->toolBar->addAction(formatterAction);
 }
 
 void MainWindow::setupTextWindows() {
