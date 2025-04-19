@@ -9,6 +9,58 @@
 #include <QSettings>
 #include <QPushButton>
 
+enum Shortcut {
+        // Actions
+        CompileShortcut,
+        FormatShortcut,
+
+        // Tabs
+        MoveTabLeftShortcut,
+        MoveTabRightShortcut,
+        CloseTabShortcut,
+
+        // Editor
+        MoveLineUpShortcut,
+        MoveLineDownShortcut,
+        DeleteLineShortcut,
+        CommentLineShortcut,
+        DuplicateLineShortcut,
+};
+
+inline QString shortcutAsString(const Shortcut shortcut) {
+        switch (shortcut) {
+                //Actions
+                case CompileShortcut:
+                        return "CompileShortcut";
+                case FormatShortcut:
+                        return "FormatShortcut";
+
+                // Tabs
+                case MoveTabLeftShortcut:
+                        return "MoveTabLeftShortcut";
+                case MoveTabRightShortcut:
+                        return "MoveTabRightShortcut";
+                case CloseTabShortcut:
+                        return "CloseTabShortcut";
+
+                // Editor
+                case MoveLineUpShortcut:
+                        return "MoveLineUpShortcut";
+                case MoveLineDownShortcut:
+                        return "MoveLineDownShortcut";
+                case DeleteLineShortcut:
+                        return "DeleteLineShortcut";
+                case CommentLineShortcut:
+                        return "CommentLineShortcut";
+                case DuplicateLineShortcut:
+                        return "DuplicateLineShortcut";
+
+                default:
+                        return "";
+        }
+}
+
+
 namespace Ui {
         class Settings;
 }
@@ -29,6 +81,9 @@ private slots:
         }
 
         void on_buttonBox_accepted();
+
+private:
+        void restoreShortcutsToDefault();
 
 private:
         Ui::Settings *ui;

@@ -9,7 +9,7 @@ TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent) {
         connect(this, &QTabWidget::tabCloseRequested, this, &TabWidget::onTabCloseRequested);
 
         QAction *action = new QAction(this);
-        action->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
+        action->setShortcut(QKeySequence::Save);
         connect(action, &QAction::triggered, this, &TabWidget::onTabSaveRequested);
         this->addAction(action);
 }

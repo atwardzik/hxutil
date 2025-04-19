@@ -90,13 +90,13 @@ void MainWindow::setupMainMenu() {
 
 
         QAction *compileAction = new QAction("Compile", this);
-        compileAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_B));
+        compileAction->setShortcut(QKeySequence(settings.value("CompileShortcut").toString()));
         connect(compileAction, &QAction::triggered, this, &MainWindow::on_actionCompileButton_triggered);
         compileAction->setIcon(createColoredIcon(":/icons/hammer.png", UtilColors::iconColor));
         ui->toolBar->addAction(compileAction);
 
         QAction *formatterAction = new QAction("Format code", this);
-        formatterAction->setShortcut(QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_L));
+        formatterAction->setShortcut(QKeySequence(settings.value("FormatShortcut").toString()));
         connect(formatterAction, &QAction::triggered, this, [this]() {
                 CodeEditor *editor = this->tabWidget->getCurrentEditor();
                 if (editor) {
@@ -215,6 +215,11 @@ void MainWindow::on_actionCompileButton_triggered(bool checked) {
         //TODO: save all opened files
         CodeEditor *currentEditor = tabWidget->getCurrentEditor();
         const QString plainTextFile = currentEditor->saveFile();
+
+        if (plainTextFile.isEmpty()) {
+                return;
+        }
+
         const QString objectFile = currentEditor->getObjectFileName();
 
         const QString command = settings.value("compiler_path").toString();
