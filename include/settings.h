@@ -60,6 +60,14 @@ inline QString shortcutAsString(const Shortcut shortcut) {
         }
 }
 
+inline QString getSetting(const QSettings &settings, const QString &setting) {
+        return settings.value(setting).toString();
+}
+
+inline QKeySequence getShortcutSetting(const QSettings &settings, const Shortcut &shortcut) {
+        return QKeySequence(settings.value(shortcutAsString(shortcut)).toString());
+}
+
 
 namespace Ui {
         class Settings;

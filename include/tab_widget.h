@@ -11,6 +11,7 @@
 #include <QIcon>
 #include <QWidget>
 #include <QVBoxLayout>
+#include <QSettings>
 
 #include <map>
 #include <iostream>
@@ -20,6 +21,8 @@ class TabWidget : public QTabWidget {
 
 private:
         std::map<int, CodeEditor *> editors;
+
+        QSettings settings;
 
         // int addTab(QWidget *widget, const QIcon &icon, const QString &label);
 
