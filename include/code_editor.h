@@ -19,6 +19,10 @@
 #include <QString>
 #include <QFormLayout>
 #include <QPushButton>
+#include <QSettings>
+#include <QProcess>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include "color_palette.h"
 #include "lanugage_specifics.h"
@@ -75,6 +79,8 @@ private:
         QString fileName;
 
         Language language;
+
+        QSettings settings;
 };
 
 

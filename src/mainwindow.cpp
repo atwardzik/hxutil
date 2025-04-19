@@ -236,7 +236,8 @@ void MainWindow::on_actionCompileButton_triggered(bool checked) {
 
         const QString objectFile = currentEditor->getObjectFileName();
 
-        const QString command = settings.value("compiler_path").toString();
+        // const QString command = settings.value("compiler_path").toString();
+        const QString command = getSetting(settings, "CompilerPath");
 
         QStringList params;
         params << "-g" << "-v"

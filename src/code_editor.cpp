@@ -4,6 +4,7 @@
 
 #include "code_editor.h"
 #include "ASMstatic.h"
+#include "settings.h"
 
 
 CodeEditor::CodeEditor(QWidget *parent, const QString &fileName, Language language) : QPlainTextEdit(parent) {
@@ -49,14 +50,41 @@ void CodeEditor::setHighlighter() const {
 }
 
 void CodeEditor::formatCode() {
+        QString plainText = this->document()->toPlainText();
         if (language == Language::ARMv6_ASM) {
-                QString plainText = this->document()->toPlainText();
-
                 std::unique_ptr<char> formatted_text(format_arm_asm_code(
                         plainText.toStdString().c_str(), plainText.length()));
                 std::string formatted_text_str = formatted_text.get();
 
                 this->document()->setPlainText(QString::fromStdString(formatted_text_str));
+        }
+        else if (language == Language::C) {
+                const QString command = getSetting(settings, "clang-formatPath");
+
+                QStringList params;
+                params << this->fileName << "--cursor" << QString::number(this->textCursor().position());
+
+                QProcess formatter;
+                formatter.start(command, params);
+                formatter.waitForFinished();
+                QString output(formatter.readAllStandardOutput());
+                QString errors(formatter.readAllStandardError());
+                output += errors;
+
+                int newlinePos = output.indexOf('\n');
+                QString json = output.sliced(0, newlinePos);
+                output.remove(0, newlinePos + 1);
+
+                this->document()->setPlainText(output);
+
+
+                QJsonDocument cursorData = QJsonDocument::fromJson(json.toUtf8());
+                if (cursorData.isObject()) {
+                        QJsonObject obj = cursorData.object();
+                        QTextCursor cursor = this->textCursor();
+                        cursor.setPosition(obj.value("Cursor").toInt());
+                        this->setTextCursor(cursor);
+                }
         }
 }
 

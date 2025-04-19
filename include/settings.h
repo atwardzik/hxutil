@@ -83,7 +83,7 @@ public:
 
 private slots:
         void ok_button_clicked() {
-                QString value = compiler_path->text();
+                QString value = compilerPath->text();
 
                 settings.setValue("compiler_path", value);
         }
@@ -96,7 +96,8 @@ private:
 private:
         Ui::Settings *ui;
         QSettings settings;
-        QLineEdit *compiler_path;
+        QLineEdit *compilerPath;
+        QLineEdit *clangFormatPath;
 };
 
 #endif // SETTINGS_H

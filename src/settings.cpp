@@ -13,9 +13,13 @@ Settings::Settings(QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
         QWidget *firstPageWidget = new QWidget();
         QVBoxLayout *firstPageLayout = new QVBoxLayout();
 
-        compiler_path = new QLineEdit(settings.value("CompilerPath").toString());
-        firstPageLayout->addWidget(compiler_path);
+        compilerPath = new QLineEdit(settings.value("CompilerPath").toString());
+        firstPageLayout->addWidget(compilerPath);
+
+        clangFormatPath = new QLineEdit(settings.value("clang-formatPath").toString());
+        firstPageLayout->addWidget(clangFormatPath);
         firstPageWidget->setLayout(firstPageLayout);
+
 
         QWidget *secondPageWidget = new QWidget();
         QVBoxLayout *secondPageLayout = new QVBoxLayout;
@@ -70,5 +74,6 @@ void Settings::restoreShortcutsToDefault() {
 }
 
 void Settings::on_buttonBox_accepted() {
-        settings.setValue("CompilerPath", compiler_path->text());
+        settings.setValue("CompilerPath", compilerPath->text());
+        settings.setValue("clang-formatPath", clangFormatPath->text());
 }
