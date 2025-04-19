@@ -6,6 +6,9 @@
 #define PALETTE_H
 
 #include <QColor>
+#include <QIcon>
+#include <QPixmap>
+#include <QBitmap>
 
 namespace LightTheme {
         const QColor backgroundColor = QColor(Qt::white);
@@ -28,6 +31,19 @@ namespace OneDarkTheme {
         const QColor cyan = QColor("#56B6C2");
 }
 
+namespace UtilColors {
+        const QColor iconColor = QColor("#6f9f55");
+}
+
 namespace Syntax {}
+
+inline QIcon createColoredIcon(QString fileName, const QColor &color) {
+        QPixmap pixmap(fileName);
+        auto mask = pixmap.createMaskFromColor(Qt::black, Qt::MaskOutColor);
+        pixmap.fill(color);
+        pixmap.setMask(mask);
+
+        return QIcon(pixmap);
+}
 
 #endif //PALETTE_H

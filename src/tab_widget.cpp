@@ -7,6 +7,11 @@
 
 TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent) {
         connect(this, &QTabWidget::tabCloseRequested, this, &TabWidget::onTabCloseRequested);
+
+        QAction *action = new QAction(this);
+        action->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
+        connect(action, &QAction::triggered, this, &TabWidget::onTabSaveRequested);
+        this->addAction(action);
 }
 
 int TabWidget::addEditor(CodeEditor *editor, const QIcon &icon, const QString &label) {
@@ -40,4 +45,12 @@ void TabWidget::onTabCloseRequested(int index) {
         QWidget *widget = this->widget(index);
         this->removeTab(index);
         delete widget;
+}
+
+void TabWidget::onTabSaveRequested() {
+        if (CodeEditor *currentEditor = getCurrentEditor()) {
+                const QString fileName = currentEditor->saveFile();
+
+                this->setTabText(this->currentIndex(), fileName);
+        }
 }

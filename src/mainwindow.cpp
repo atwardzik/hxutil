@@ -90,7 +90,7 @@ void MainWindow::setupMainMenu() {
 
 
         QAction *compileAction = new QAction("Compile", this);
-        compileAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_R));
+        compileAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_B));
         connect(compileAction, &QAction::triggered, this, &MainWindow::on_actionCompileButton_triggered);
         compileAction->setIcon(createColoredIcon(":/icons/hammer.png", UtilColors::iconColor));
         ui->toolBar->addAction(compileAction);
@@ -212,8 +212,10 @@ void MainWindow::on_actionHEXOpenFile_triggered(bool checked) {
 
 
 void MainWindow::on_actionCompileButton_triggered(bool checked) {
-        const QString plainTextFile = ui->plainTextEdit->saveFile(); //TODO: save all opened files
-        const QString objectFile = ui->plainTextEdit->getObjectFileName();
+        //TODO: save all opened files
+        CodeEditor *currentEditor = tabWidget->getCurrentEditor();
+        const QString plainTextFile = currentEditor->saveFile();
+        const QString objectFile = currentEditor->getObjectFileName();
 
         const QString command = settings.value("compiler_path").toString();
 

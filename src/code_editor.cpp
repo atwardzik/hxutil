@@ -18,10 +18,6 @@ CodeEditor::CodeEditor(QWidget *parent, const QString &fileName, Language langua
         connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
         connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
 
-        QAction *action = new QAction(this);
-        action->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
-        connect(action, &QAction::triggered, this, &CodeEditor::onShortcutSave);
-        this->addAction(action);
 
         this->setFont(QFont("JetBrains Mono", 13));
         changePalette();
@@ -154,10 +150,6 @@ QString CodeEditor::saveFile() {
         }
 
         return fileName;
-}
-
-void CodeEditor::onShortcutSave() {
-        this->saveFile();
 }
 
 int CodeEditor::lineNumberAreaWidth() {

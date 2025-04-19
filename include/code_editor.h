@@ -40,6 +40,8 @@ public:
 
         QString getObjectFileName();
 
+        void formatCode();
+
         void lineNumberAreaPaintEvent(QPaintEvent *event);
 
         int lineNumberAreaWidth();
@@ -55,8 +57,6 @@ private slots:
         void highlightCurrentLine();
 
         void updateLineNumberArea(const QRect &, int);
-
-        void onShortcutSave();
 
 private:
         void changePalette();
