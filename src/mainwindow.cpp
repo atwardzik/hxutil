@@ -90,13 +90,13 @@ void MainWindow::setupMainMenu() {
 
 
         QAction *compileAction = new QAction("Compile", this);
-        compileAction->setShortcut(getShortcutSetting(settings, Shortcut::CompileShortcut));
+        compileAction->setShortcut(getShortcutSetting(settings, Shortcut::Compile));
         connect(compileAction, &QAction::triggered, this, &MainWindow::on_actionCompileButton_triggered);
         compileAction->setIcon(createColoredIcon(":/icons/hammer.png", UtilColors::iconColor));
         ui->toolBar->addAction(compileAction);
 
         QAction *formatterAction = new QAction("Format code", this);
-        formatterAction->setShortcut(getShortcutSetting(settings, Shortcut::FormatShortcut));
+        formatterAction->setShortcut(getShortcutSetting(settings, Shortcut::Format));
         connect(formatterAction, &QAction::triggered, this, [this]() {
                 CodeEditor *editor = this->tabWidget->getCurrentEditor();
                 if (editor) {

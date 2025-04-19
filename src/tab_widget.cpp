@@ -15,7 +15,7 @@ TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent) {
         this->addAction(saveAction);
 
         QAction *moveTabLeftAction = new QAction(this);
-        moveTabLeftAction->setShortcut(getShortcutSetting(settings, Shortcut::MoveTabLeftShortcut));
+        moveTabLeftAction->setShortcut(getShortcutSetting(settings, Shortcut::MoveTabLeft));
         connect(moveTabLeftAction, &QAction::triggered, this, [this]() {
                 if (int currentIndex = this->currentIndex(); currentIndex > 0) {
                         this->setCurrentIndex(currentIndex - 1);
@@ -24,13 +24,19 @@ TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent) {
         this->addAction(moveTabLeftAction);
 
         QAction *moveTabRightAction = new QAction(this);
-        moveTabRightAction->setShortcut(getShortcutSetting(settings, Shortcut::MoveTabRightShortcut));
+        moveTabRightAction->setShortcut(getShortcutSetting(settings, Shortcut::MoveTabRight));
         connect(moveTabRightAction, &QAction::triggered, this, [this]() {
                 if (int currentIndex = this->currentIndex(); currentIndex < this->count() - 1) {
                         this->setCurrentIndex(currentIndex + 1);
                 }
         });
         this->addAction(moveTabRightAction);
+
+
+        QAction *closeTabAction = new QAction(this);
+        closeTabAction->setShortcut(getShortcutSetting(settings, Shortcut::CloseTab));
+        connect(closeTabAction, &QAction::triggered, this, &TabWidget::onTabCloseRequested);
+        this->addAction(closeTabAction);
 }
 
 int TabWidget::addEditor(CodeEditor *editor, const QIcon &icon, const QString &label) {

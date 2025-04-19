@@ -43,29 +43,29 @@ Settings::~Settings() {
 
 void Settings::restoreShortcutsToDefault() {
         // Actions
-        settings.setValue(shortcutAsString(Shortcut::CompileShortcut),
+        settings.setValue(shortcutAsString(Shortcut::Compile),
                           QKeySequence(Qt::CTRL | Qt::Key_B));
-        settings.setValue(shortcutAsString(Shortcut::FormatShortcut),
+        settings.setValue(shortcutAsString(Shortcut::Format),
                           QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_L));
 
         // Tabs
-        settings.setValue(shortcutAsString(Shortcut::MoveTabLeftShortcut),
+        settings.setValue(shortcutAsString(Shortcut::MoveTabLeft),
                           QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_BracketLeft));
-        settings.setValue(shortcutAsString(Shortcut::MoveTabRightShortcut),
+        settings.setValue(shortcutAsString(Shortcut::MoveTabRight),
                           QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_BracketRight));
-        settings.setValue(shortcutAsString(Shortcut::CloseTabShortcut),
+        settings.setValue(shortcutAsString(Shortcut::CloseTab),
                           QKeySequence(Qt::CTRL | Qt::Key_W));
 
         // Editor
-        settings.setValue(shortcutAsString(Shortcut::MoveLineUpShortcut),
+        settings.setValue(shortcutAsString(Shortcut::MoveLineUp),
                           QKeySequence(Qt::ALT | Qt::SHIFT | Qt::Key_Up));
-        settings.setValue(shortcutAsString(Shortcut::MoveLineDownShortcut),
+        settings.setValue(shortcutAsString(Shortcut::MoveLineDown),
                           QKeySequence(Qt::ALT | Qt::SHIFT | Qt::Key_Down));
-        settings.setValue(shortcutAsString(Shortcut::DeleteLineShortcut),
+        settings.setValue(shortcutAsString(Shortcut::DeleteLine),
                           QKeySequence(Qt::CTRL | Qt::Key_Backspace));
-        settings.setValue(shortcutAsString(Shortcut::CommentLineShortcut),
+        settings.setValue(shortcutAsString(Shortcut::CommentLine),
                           QKeySequence(Qt::CTRL | Qt::Key_Slash));
-        settings.setValue(shortcutAsString(Shortcut::DuplicateLineShortcut),
+        settings.setValue(shortcutAsString(Shortcut::DuplicateLine),
                           QKeySequence(Qt::CTRL | Qt::Key_D));
 }
 

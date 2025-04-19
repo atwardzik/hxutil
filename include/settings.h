@@ -11,48 +11,48 @@
 
 enum Shortcut {
         // Actions
-        CompileShortcut,
-        FormatShortcut,
+        Compile,
+        Format,
 
         // Tabs
-        MoveTabLeftShortcut,
-        MoveTabRightShortcut,
-        CloseTabShortcut,
+        MoveTabLeft,
+        MoveTabRight,
+        CloseTab,
 
         // Editor
-        MoveLineUpShortcut,
-        MoveLineDownShortcut,
-        DeleteLineShortcut,
-        CommentLineShortcut,
-        DuplicateLineShortcut,
+        MoveLineUp,
+        MoveLineDown,
+        DeleteLine,
+        CommentLine,
+        DuplicateLine,
 };
 
 inline QString shortcutAsString(const Shortcut shortcut) {
         switch (shortcut) {
                 //Actions
-                case CompileShortcut:
+                case Compile:
                         return "CompileShortcut";
-                case FormatShortcut:
+                case Format:
                         return "FormatShortcut";
 
                 // Tabs
-                case MoveTabLeftShortcut:
+                case MoveTabLeft:
                         return "MoveTabLeftShortcut";
-                case MoveTabRightShortcut:
+                case MoveTabRight:
                         return "MoveTabRightShortcut";
-                case CloseTabShortcut:
+                case CloseTab:
                         return "CloseTabShortcut";
 
                 // Editor
-                case MoveLineUpShortcut:
+                case MoveLineUp:
                         return "MoveLineUpShortcut";
-                case MoveLineDownShortcut:
+                case MoveLineDown:
                         return "MoveLineDownShortcut";
-                case DeleteLineShortcut:
+                case DeleteLine:
                         return "DeleteLineShortcut";
-                case CommentLineShortcut:
+                case CommentLine:
                         return "CommentLineShortcut";
-                case DuplicateLineShortcut:
+                case DuplicateLine:
                         return "DuplicateLineShortcut";
 
                 default:
