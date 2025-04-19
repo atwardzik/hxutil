@@ -75,7 +75,7 @@
          </size>
         </property>
        </widget>
-       <widget class="QSplitter" name="splitter_2">
+       <widget class="QSplitter" name="editor_browsers_splitter">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -176,7 +176,7 @@ msg:	.ascii &quot;Hello World\n&quot;
           </attribute>
          </widget>
         </widget>
-        <widget class="QSplitter" name="splitter">
+        <widget class="QSplitter" name="browsers_splitter">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
          </property>
@@ -278,14 +278,18 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <property name="title">
       <string>New</string>
      </property>
+     <addaction name="actionCNewFile"/>
      <addaction name="actionAssemblyNewFile"/>
+     <addaction name="separator"/>
      <addaction name="actionHEXNewFile"/>
     </widget>
     <widget class="QMenu" name="menuOpen">
      <property name="title">
       <string>Open...</string>
      </property>
+     <addaction name="actionCOpenFile"/>
      <addaction name="actionAssemblyOpenFile"/>
+     <addaction name="separator"/>
      <addaction name="actionHEXOpenFile"/>
     </widget>
     <addaction name="menuNewFile"/>
@@ -392,6 +396,16 @@ height: 10px;</string>
   <action name="actionContact">
    <property name="text">
     <string>Contact</string>
+   </property>
+  </action>
+  <action name="actionCOpenFile">
+   <property name="text">
+    <string>C File</string>
+   </property>
+  </action>
+  <action name="actionCNewFile">
+   <property name="text">
+    <string>C File</string>
    </property>
   </action>
  </widget>

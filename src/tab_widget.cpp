@@ -35,7 +35,7 @@ TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent) {
 
         QAction *closeTabAction = new QAction(this);
         closeTabAction->setShortcut(getShortcutSetting(settings, Shortcut::CloseTab));
-        connect(closeTabAction, &QAction::triggered, this, &TabWidget::onTabCloseRequested);
+        connect(closeTabAction, &QAction::triggered, this, &TabWidget::onCurrentTabCloseRequested);
         this->addAction(closeTabAction);
 }
 
@@ -48,6 +48,8 @@ int TabWidget::addEditor(CodeEditor *editor, const QIcon &icon, const QString &l
 
         const int ret = this->addTab(tab, icon, label);
         editors[ret] = editor;
+
+        this->setCurrentIndex(ret);
 
         return ret;
 }
@@ -67,6 +69,17 @@ void TabWidget::onTabCloseRequested(int index) {
                 editors[index]->saveFile();
         }
 
+        QWidget *widget = this->widget(index);
+        this->removeTab(index);
+        delete widget;
+}
+
+void TabWidget::onCurrentTabCloseRequested() {
+        if (CodeEditor *currentEditor = getCurrentEditor()) {
+                const QString fileName = currentEditor->saveFile();
+        }
+
+        int index = this->currentIndex();
         QWidget *widget = this->widget(index);
         this->removeTab(index);
         delete widget;

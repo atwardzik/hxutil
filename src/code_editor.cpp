@@ -18,8 +18,7 @@ CodeEditor::CodeEditor(QWidget *parent, const QString &fileName, Language langua
         connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
         connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
 
-
-        this->setFont(QFont("JetBrains Mono", 13));
+        this->setFont(QFont("JetBrains Mono", 13, QFont::Normal));
         changePalette();
 
         updateLineNumberAreaWidth(0);
@@ -38,7 +37,10 @@ void CodeEditor::setHighlighter() const {
                         new ARMv6_ASM_Highlighter(this->document());
                         break;
                 case x86_ASM:
+                        break;
                 case C:
+                        new C_Highlighter(this->document());
+                        break;
                 case HEX:
                 case None:
                 default:

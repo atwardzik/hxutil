@@ -46,6 +46,10 @@ private slots:
 
         void on_actionCompileButton_triggered(bool checked);
 
+        void on_actionCOpenFile_triggered(bool checked);
+
+        void on_actionCNewFile_triggered(bool checked);
+
 protected:
         void changeEvent(QEvent *) override;
 

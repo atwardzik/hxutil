@@ -83,6 +83,9 @@ static QString getFileFilter(Language language) {
                 case Generic_ASM:
                         filter = "Assembly files (*.s *.S *.asm)";
                         break;
+                case C:
+                        filter = "C files (*.h *.c)";
+                        break;
                 case HEX:
                         filter = "Object files (*.o *.obj *.elf *.so *.out)";
                         break;

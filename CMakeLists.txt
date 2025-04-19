@@ -28,6 +28,9 @@ set(icons_resource_files
         "icons/debug.png"
         "icons/cpu.png"
         "icons/cli.png"
+        "icons/cLanguage.png"
+        "icons/asmLanguage.png"
+        "icons/hexRepr.png"
 )
 
 
@@ -56,7 +59,7 @@ qt_add_executable(hxutil
         include/tab_widget.h src/tab_widget.cpp
         src/file_modifier.cpp include/file_modifier.h
         src/highlighter/highlighter.cpp include/highlighter.h
-        src/highlighter/ARMv6_ASM_highlighter.cpp
+        src/highlighter/ARMv6_ASM_highlighter.cpp src/highlighter/c_highlighter.cpp
         include/file_viewer.h
         #        src/binary_file_handler.cppm
 )

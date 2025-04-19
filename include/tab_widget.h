@@ -33,6 +33,8 @@ private slots:
 
         void onTabSaveRequested();
 
+        void onCurrentTabCloseRequested();
+
 public:
         explicit TabWidget(QWidget *parent);
 

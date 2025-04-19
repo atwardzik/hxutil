@@ -42,10 +42,15 @@ void ARMv6_ASM_Highlighter::setupCodeHighlights() {
         directiveFormat.setForeground(OneDarkTheme::yellow);
         addHighlightingRule(directiveFormat, R"(\.\S*(\s|$))");
 
+        escapeSequenceFormat.setForeground(OneDarkTheme::blue);
+        addHighlightingRule(escapeSequenceFormat, "(\\\\[abefnrtv\\\\\'\"\?])|(%[diuoxXfFeEgGaAcspn%])");
+
         singleLineCommentFormat.setForeground(OneDarkTheme::lightGray);
+        singleLineCommentFormat.setFontItalic(true);
         addHighlightingRule(singleLineCommentFormat, "(//[^\n]*)|(;[^\n]*)|(@[^\n]*)");
 
         multiLineCommentFormat.setForeground(OneDarkTheme::lightGray);
+        multiLineCommentFormat.setFontItalic(true);
         commentStartExpression = QRegularExpression(QStringLiteral("/\\*"));
         commentEndExpression = QRegularExpression(QStringLiteral("\\*/"));
 }

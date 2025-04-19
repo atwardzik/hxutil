@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         ui->fileTreeView->setModel(model);
 
         // command_tab
+        ui->editor_browsers_splitter->setSizes({700, 300});
         ui->file_text_splitter->setSizes({0, 65535});
         ui->command_tab_splitter->setSizes({65535, 0});
         QToolButton *btn = new QToolButton;
@@ -111,7 +112,9 @@ void MainWindow::setupTextWindows() {
         CodeEditor *defaultEditor = new CodeEditor(this, "", Language::ARMv6_ASM);
         defaultEditor->setPlainText(ui->plainTextEdit->toPlainText());
         tabWidget->removeTab(0);
-        tabWidget->addEditor(defaultEditor, QIcon::fromTheme(QIcon::ThemeIcon::Computer), "example");
+        tabWidget->addEditor(defaultEditor,
+                             createColoredIcon(":/icons/asmLanguage.png", OneDarkTheme::magenta),
+                             "example");
 
         ui->textBrowserUp->setLineWrapMode(QTextEdit::NoWrap);
         ui->textBrowserDown->setLineWrapMode(QTextEdit::NoWrap);
@@ -193,12 +196,23 @@ void MainWindow::on_actionAssemblyOpenFile_triggered(bool checked) {
         CodeEditor *editor = new CodeEditor(this, fileName, assembly_dialect);
         editor->setPlainText(plaintext);
 
-        tabWidget->addEditor(editor, QIcon::fromTheme(QIcon::ThemeIcon::Computer), fileName);
+        tabWidget->addEditor(editor, createColoredIcon(":/icons/asmLanguage.png", OneDarkTheme::magenta), fileName);
         modeLabel->setText("Mode: Assembly → HEX");
 }
 
 void MainWindow::on_actionAssemblyNewFile_triggered(bool checked) {}
 
+void MainWindow::on_actionCOpenFile_triggered(bool checked) {
+        const auto [fileName, plaintext] = openFileGetPlaintext(Language::C);
+
+        CodeEditor *editor = new CodeEditor(this, fileName, Language::C);
+        editor->setPlainText(plaintext);
+
+        tabWidget->addEditor(editor, createColoredIcon(":/icons/cLanguage.png", OneDarkTheme::magenta), fileName);
+        modeLabel->setText("Mode: C → HEX");
+}
+
+void MainWindow::on_actionCNewFile_triggered(bool checked) {}
 
 void MainWindow::on_actionHEXOpenFile_triggered(bool checked) {
         const OpenFile file = openFileGetPlaintext(Language::HEX);
