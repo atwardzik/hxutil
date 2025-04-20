@@ -1,5 +1,7 @@
 #include "settings.h"
 
+#include <__format/range_default_formatter.h>
+
 #include "../ui/ui_settings.h"
 
 Settings::Settings(QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
@@ -13,10 +15,24 @@ Settings::Settings(QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
         QWidget *firstPageWidget = new QWidget();
         QVBoxLayout *firstPageLayout = new QVBoxLayout();
 
+        QLabel *label = new QLabel("Compiler path: ");
         compilerPath = new QLineEdit(settings.value("CompilerPath").toString());
+        firstPageLayout->addWidget(label);
         firstPageLayout->addWidget(compilerPath);
 
+        label = new QLabel("Clang path: ");
+        clangPath = new QLineEdit(settings.value("clangPath").toString());
+        firstPageLayout->addWidget(label);
+        firstPageLayout->addWidget(clangPath);
+
+        label = new QLabel("Include path: ");
+        includePath = new QLineEdit(settings.value("IncludePath").toString());
+        firstPageLayout->addWidget(label);
+        firstPageLayout->addWidget(includePath);
+
+        label = new QLabel("clang-format path: ");
         clangFormatPath = new QLineEdit(settings.value("clang-formatPath").toString());
+        firstPageLayout->addWidget(label);
         firstPageLayout->addWidget(clangFormatPath);
         firstPageWidget->setLayout(firstPageLayout);
 
@@ -75,5 +91,7 @@ void Settings::restoreShortcutsToDefault() {
 
 void Settings::on_buttonBox_accepted() {
         settings.setValue("CompilerPath", compilerPath->text());
+        settings.setValue("clangPath", clangPath->text());
         settings.setValue("clang-formatPath", clangFormatPath->text());
+        settings.setValue("IncludePath", includePath->text());
 }

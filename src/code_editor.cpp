@@ -40,7 +40,7 @@ void CodeEditor::setHighlighter() const {
                 case x86_ASM:
                         break;
                 case C:
-                        new C_Highlighter(this->document());
+                        new C_Highlighter(this->document(), fileName);
                         break;
                 case HEX:
                 case None:

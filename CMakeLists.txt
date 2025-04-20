@@ -38,7 +38,7 @@ set(icons_resource_files
 include_directories(${CMAKE_SOURCE_DIR} ui include src)
 link_directories(${CMAKE_SOURCE_DIR} ui include src)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Concurrent)
 
 find_package(Qt6 6.8.3 REQUIRED COMPONENTS WebEngineWidgets)
 #target_link_libraries(hxutil PRIVATE Qt6::WebEngineWidgets)
@@ -110,7 +110,7 @@ target_link_libraries(hxutil
         PRIVATE
         Qt::Core
         Qt::Widgets
-        Qt::WebEngineWidgets
+        Qt6::Concurrent
 )
 
 include(GNUInstallDirs)

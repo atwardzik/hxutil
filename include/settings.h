@@ -97,6 +97,8 @@ private:
         Ui::Settings *ui;
         QSettings settings;
         QLineEdit *compilerPath;
+        QLineEdit *clangPath;
+        QLineEdit *includePath;
         QLineEdit *clangFormatPath;
 };
 

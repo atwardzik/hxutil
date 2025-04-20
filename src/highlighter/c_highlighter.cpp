@@ -4,8 +4,14 @@
 
 #include "color_palette.h"
 #include "highlighter.h"
+#include "settings.h"
 
-C_Highlighter::C_Highlighter(QTextDocument *parent) : Highlighter(parent) {
+#include <QProcess>
+#include <QtConcurrent>
+#include <QThread>
+#include <thread>
+
+C_Highlighter::C_Highlighter(QTextDocument *parent, QString filename) : Highlighter(parent, filename) {
         setupCodeHighlights();
 }
 
@@ -25,7 +31,7 @@ void C_Highlighter::setupCodeHighlights() {
                 "\\bdo\\b", "\\brestrict\\b", "\\bunsigned\\b", "\\b_Noreturn\\b",
                 "\\bdouble\\b", "\\breturn\\b", "\\bvoid\\b", "\\b_Static_assert\\b",
                 "\\belse\\b", "\\bshort\\b", "\\bvolatile\\b", "\\b_Thread_local\\b",
-                "\\benum\\b", "\\bsigned\\b", "\\bwhile\\b"
+                "\\benum\\b", "\\bsigned\\b", "\\bwhile\\b", "\\b__attribute__\\b"
         };
         keywordFormat.setForeground(OneDarkTheme::magenta);
         keywordFormat.setFontItalic(true);
@@ -71,6 +77,105 @@ void C_Highlighter::setupCodeHighlights() {
         commentEndExpression = QRegularExpression(QStringLiteral("\\*/"));
 }
 
+void C_Highlighter::readTokens() {
+        const QString command = getSetting(settings, "clangPath");
+        const QString includePath = getSetting(settings, "IncludePath");
+
+        QStringList params;
+        params << "-I" << includePath
+                        << "-fsyntax-only"
+                        << "-Xclang"
+                        << "-dump-tokens"
+                        << fileName;
+
+        QProcess clangIdentifiers;
+        clangIdentifiers.start(command, params);
+        clangIdentifiers.waitForFinished();
+        QString output(clangIdentifiers.readAllStandardOutput());
+        QString errors(clangIdentifiers.readAllStandardError());
+        output += errors;
+
+        tokenWriteMutex.lock();
+        tokens.clear();
+        tokens = output.split("\n");
+        tokenWriteMutex.unlock();
+}
+
+void C_Highlighter::highlightUserDefinedTypes(const QString &text) {
+        //yellow
+}
+
+// static bool is_std_type(const QString &token) {
+//         const QString types[] = {
+//                 "int", "char", "bool", "float", "double", "long", "short", "auto", "signed", "unsigned"
+//         };
+//
+//         for (int i = 0; i < 10; ++i) {
+//                 if (token.startsWith(types[i])) {
+//                         return true;
+//                 }
+//         }
+//
+//         return false;
+// }
+
+void C_Highlighter::highlightGlobalIdentifiers(const QString &text) {
+        /*
+        int 'int'	 [StartOfLine]	Loc=<lib.h:8:1>
+        identifier 'global'	 [LeadingSpace]	Loc=<lib.h:8:5>
+        equal '='	 [LeadingSpace]	Loc=<lib.h:8:12>
+        numeric_constant '10'	 [LeadingSpace]	Loc=<lib.h:8:14>
+        semi ';'		Loc=<lib.h:8:16>
+         */
+
+        // if identifier and previous in_types or previous is ptr
+        // else if identifier and previous struct and previous not typedef
+        //      -> while not (bracket and next *ident* and next __attribute or semi)
+
+        QTextCharFormat format;
+        format.setForeground(OneDarkTheme::red);
+
+        int scope = 0;
+        auto it = tokens.begin();
+
+        while (it++ != tokens.end()) {
+                // QStringList line = it->split(QRegularExpression("\\s"));
+                // if (it->startsWith("identifier")) {
+                //         if ((it + 1)->startsWith("l_paren")) {
+                //                 continue;
+                //         }
+                //
+                //         if (is_std_type(*(it - 1))) {
+                //                 globalIdentifiersRules.push_back({});
+                //         }
+                //         else if ((it - 1)->startsWith("star") && is_std_type(*(it - 2))) {
+                //
+                //         }
+                //         else if ((it - 1)->startsWith("star") && (it - 2)->startsWith("identifier")) {
+                //
+                //         }
+                //         else if ((it - 1)->startsWith("struct") && !(it - 2)->startsWith("typedef")) {
+                //
+                //         }
+                // }
+        }
+
+        scope = false;
+
+        if (scope) {}
+}
+
+void C_Highlighter::highlightOther(const QString &text) {
+        readTokens();
+
+        // auto detectTypes = std::thread(&C_Highlighter::highlightUserDefinedTypes, this, text);
+        // auto detectGlobals = std::thread(&C_Highlighter::highlightGlobalIdentifiers, this, text);
+
+        // detectTypes.join();
+        // detectGlobals.join();
+}
+
+
 void C_Highlighter::highlightBlock(const QString &text) {
         QRegularExpressionMatchIterator matchIterator = functionRule.pattern.globalMatch(text);
         while (matchIterator.hasNext()) {
@@ -80,4 +185,12 @@ void C_Highlighter::highlightBlock(const QString &text) {
 
 
         Highlighter::highlightBlock(text);
+
+
+        QFuture<void> highlightOtherFuture = QtConcurrent::run([this, text]() {
+                highlightOther(text);
+        });
+        // detectIdentifiers();
+        // matchRules(globalIdentifiersRules, text);
+        // matchRules(userDefinedTypesRules, text);
 }

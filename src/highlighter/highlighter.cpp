@@ -14,14 +14,23 @@ void Highlighter::addHighlightingRule(const QTextCharFormat &format, const QStri
 }
 
 
-void Highlighter::highlightSyntax(const QString &text) {
-        for (const HighlightingRule &rule: std::as_const(highlightingRules)) {
-                QRegularExpressionMatchIterator matchIterator = rule.pattern.globalMatch(text);
-                while (matchIterator.hasNext()) {
-                        QRegularExpressionMatch match = matchIterator.next();
-                        setFormat(match.capturedStart(), match.capturedLength(), rule.format);
-                }
+void Highlighter::matchRule(const HighlightingRule &rule, const QString &text) {
+        QRegularExpressionMatchIterator matchIterator = rule.pattern.globalMatch(text);
+        while (matchIterator.hasNext()) {
+                QRegularExpressionMatch match = matchIterator.next();
+                setFormat(match.capturedStart(), match.capturedLength(), rule.format);
         }
+}
+
+void Highlighter::matchRules(const QVector<HighlightingRule> &rules, const QString &text) {
+        for (const HighlightingRule &rule: std::as_const(rules)) {
+                matchRule(rule, text);
+        }
+}
+
+
+void Highlighter::highlightSyntax(const QString &text) {
+        matchRules(highlightingRules, text);
 }
 
 void Highlighter::highlightComments(const QString &text) {
