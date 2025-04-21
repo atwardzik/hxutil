@@ -110,10 +110,12 @@ void C_Highlighter::readTokens() {
         // output += getDependencies.readAllStandardError();
 
 
-        tagsMutex.lock();
-        tags.clear();
-        tags = output.split("\n");
-        tagsMutex.unlock();
+        if (!output.isEmpty()) {
+                tagsMutex.lock();
+                tags.clear();
+                tags = output.split("\n");
+                tagsMutex.unlock();
+        }
 }
 
 QList<QString> C_Highlighter::detect(const QString &type) {
@@ -123,9 +125,8 @@ QList<QString> C_Highlighter::detect(const QString &type) {
         auto currentTags = tags;
         tagsMutex.unlock();
 
-        auto tag = currentTags.begin();
-        while (tag++ != currentTags.end()) {
-                QStringList line = tag->split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+        for (const auto &tag: currentTags) {
+                QStringList line = tag.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
 
                 if (line.size() < 2) {
                         continue;

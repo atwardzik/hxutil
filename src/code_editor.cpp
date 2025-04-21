@@ -37,16 +37,16 @@ void CodeEditor::setLanguage(const Language language) {
         this->language = language;
 }
 
-void CodeEditor::setHighlighter() const {
+void CodeEditor::setHighlighter() {
         switch (language) {
                         using enum Language;
                 case ARMv6_ASM:
-                        new ARMv6_ASM_Highlighter(this->document());
+                        highlighter = new ARMv6_ASM_Highlighter(this->document());
                         break;
                 case x86_ASM:
                         break;
                 case C:
-                        new C_Highlighter(this->document(), fileName);
+                        highlighter = new C_Highlighter(this->document(), fileName);
                         break;
                 case HEX:
                 case None:

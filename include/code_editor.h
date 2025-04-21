@@ -65,7 +65,7 @@ private slots:
 private:
         void changePalette();
 
-        void setHighlighter() const;
+        void setHighlighter();
 
         QString getFileExtension() const;
 
@@ -81,6 +81,8 @@ private:
         Language language;
 
         QSettings settings;
+
+        Highlighter *highlighter;
 };
 
 

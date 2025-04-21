@@ -2,13 +2,14 @@
 // Created by Artur Twardzik on 23/03/2025.
 //
 
+
+#ifndef HIGHLIGHTER_H
+#define HIGHLIGHTER_H
+
 #include <QMutex>
 #include <QSyntaxHighlighter>
 #include <QRegularExpression>
 #include <QSettings>
-
-#ifndef HIGHLIGHTER_H
-#define HIGHLIGHTER_H
 
 class Highlighter : public QSyntaxHighlighter {
         Q_OBJECT
