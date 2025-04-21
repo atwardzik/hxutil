@@ -72,18 +72,19 @@ class C_Highlighter final : public Highlighter {
         QTextCharFormat escapeSequenceFormat;
 
         HighlightingRule functionRule;
-        QVector<HighlightingRule> globalIdentifiersRules;
-        QVector<HighlightingRule> userDefinedTypesRules;
-        QMutex tokenWriteMutex;
-        QStringList tokens;
+        QMutex rulesMutex;
+        QList<HighlightingRule> globalIdentifiersRules;
+        QList<HighlightingRule> userDefinedTypesRules;
+        QMutex tagsMutex;
+        QStringList tags;
 
         void setupCodeHighlights() override;
 
         void readTokens();
 
-        void highlightUserDefinedTypes(const QString &text);
+        QList<QString> detectUserDefinedTypes();
 
-        void highlightGlobalIdentifiers(const QString &text);
+        QList<QString> detectGlobalIdentifiers();
 
         void highlightOther(const QString &text);
 

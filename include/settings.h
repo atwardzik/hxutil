@@ -82,11 +82,11 @@ public:
         ~Settings();
 
 private slots:
-        void ok_button_clicked() {
-                QString value = compilerPath->text();
-
-                settings.setValue("compiler_path", value);
-        }
+        // void ok_button_clicked() {
+        //         QString value = compilerPath->text();
+        //
+        //         settings.setValue("compiler_path", value);
+        // }
 
         void on_buttonBox_accepted();
 
@@ -96,9 +96,11 @@ private:
 private:
         Ui::Settings *ui;
         QSettings settings;
-        QLineEdit *compilerPath;
-        QLineEdit *clangPath;
+        QLineEdit *cCompilerPath;
+        QLineEdit *asmCompilerPath;
         QLineEdit *includePath;
+        QLineEdit *ctagsPath;
+        QLineEdit *clangPath;
         QLineEdit *clangFormatPath;
 };
 

@@ -15,20 +15,30 @@ Settings::Settings(QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
         QWidget *firstPageWidget = new QWidget();
         QVBoxLayout *firstPageLayout = new QVBoxLayout();
 
-        QLabel *label = new QLabel("Compiler path: ");
-        compilerPath = new QLineEdit(settings.value("CompilerPath").toString());
+        QLabel *label = new QLabel("Default C compiler path: ");
+        cCompilerPath = new QLineEdit(settings.value("cCompilerPath").toString());
         firstPageLayout->addWidget(label);
-        firstPageLayout->addWidget(compilerPath);
+        firstPageLayout->addWidget(cCompilerPath);
 
-        label = new QLabel("Clang path: ");
-        clangPath = new QLineEdit(settings.value("clangPath").toString());
+        label = new QLabel("Default ASM compiler path: ");
+        asmCompilerPath = new QLineEdit(settings.value("asmCompilerPath").toString());
         firstPageLayout->addWidget(label);
-        firstPageLayout->addWidget(clangPath);
+        firstPageLayout->addWidget(asmCompilerPath);
 
         label = new QLabel("Include path: ");
         includePath = new QLineEdit(settings.value("IncludePath").toString());
         firstPageLayout->addWidget(label);
         firstPageLayout->addWidget(includePath);
+
+        label = new QLabel("ctags path: ");
+        ctagsPath = new QLineEdit(settings.value("ctagsPath").toString());
+        firstPageLayout->addWidget(label);
+        firstPageLayout->addWidget(ctagsPath);
+
+        label = new QLabel("Clang path: ");
+        clangPath = new QLineEdit(settings.value("clangPath").toString());
+        firstPageLayout->addWidget(label);
+        firstPageLayout->addWidget(clangPath);
 
         label = new QLabel("clang-format path: ");
         clangFormatPath = new QLineEdit(settings.value("clang-formatPath").toString());
@@ -90,8 +100,10 @@ void Settings::restoreShortcutsToDefault() {
 }
 
 void Settings::on_buttonBox_accepted() {
-        settings.setValue("CompilerPath", compilerPath->text());
+        settings.setValue("cCompilerPath", cCompilerPath->text());
+        settings.setValue("asmCompilerPath", asmCompilerPath->text());
+        settings.setValue("IncludePath", includePath->text());
+        settings.setValue("ctagsPath", ctagsPath->text());
         settings.setValue("clangPath", clangPath->text());
         settings.setValue("clang-formatPath", clangFormatPath->text());
-        settings.setValue("IncludePath", includePath->text());
 }
