@@ -63,6 +63,9 @@ public:
         explicit ARMv6_ASM_Highlighter(QTextDocument *parent = nullptr);
 };
 
+
+// TODO: for now it searches million times through all dependencies, it should be optimized to
+//      search in those files only if they change (QFileSystemWatcher)
 class C_Highlighter final : public Highlighter {
         QTextCharFormat keywordFormat;
         QTextCharFormat preprocessorFormat;
@@ -71,10 +74,18 @@ class C_Highlighter final : public Highlighter {
         QTextCharFormat numberFormat;
         QTextCharFormat escapeSequenceFormat;
 
-        HighlightingRule functionRule;
-        QMutex rulesMutex;
+        QMutex globalIdentifiersRulesMutex;
         QList<HighlightingRule> globalIdentifiersRules;
-        QList<HighlightingRule> userDefinedTypesRules;
+
+        QMutex typedefsMutex;
+        QList<HighlightingRule> typedefsRules;
+
+        QMutex functionsMutex;
+        QList<HighlightingRule> functionsRules;
+
+        QMutex structsMutex;
+        QList<HighlightingRule> structsRules;
+
         QMutex tagsMutex;
         QStringList tags;
 
@@ -82,9 +93,9 @@ class C_Highlighter final : public Highlighter {
 
         void readTokens();
 
-        QList<QString> detectUserDefinedTypes();
+        QList<QString> detect(const QString &type);
 
-        QList<QString> detectGlobalIdentifiers();
+        void addRules(const QList<QString> &newRules, QList<HighlightingRule> &dst, const QTextCharFormat &format);
 
         void highlightOther(const QString &text);
 

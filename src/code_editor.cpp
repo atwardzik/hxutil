@@ -25,6 +25,11 @@ CodeEditor::CodeEditor(QWidget *parent, const QString &fileName, Language langua
         updateLineNumberAreaWidth(0);
         highlightCurrentLine();
         setHighlighter();
+        connect(this->document(), &QTextDocument::contentsChanged, [this] {
+                if (!this->fileName.isEmpty()) {
+                        saveFile();
+                }
+        });
 }
 
 void CodeEditor::setLanguage(const Language language) {

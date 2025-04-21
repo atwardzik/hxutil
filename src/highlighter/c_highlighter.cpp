@@ -10,8 +10,10 @@
 #include <QtConcurrent>
 #include <QThread>
 #include <thread>
+#include <QString>
 
 #include "ASMstatic.h"
+#include "file_modifier.h"
 
 C_Highlighter::C_Highlighter(QTextDocument *parent, QString filename) : Highlighter(parent, filename) {
         setupCodeHighlights();
@@ -66,9 +68,6 @@ void C_Highlighter::setupCodeHighlights() {
         addHighlightingRule(escapeSequenceFormat, "(\\\\[abefnrtv\\\\\'\"\?])|(%[diuoxXfFeEgGaAcspn%])");
 
 
-        functionRule.format.setForeground(OneDarkTheme::blue);
-        functionRule.pattern = QRegularExpression("[_\\w][A-Za-z0-9_]*\\(");
-
         singleLineCommentFormat.setForeground(OneDarkTheme::lightGray);
         singleLineCommentFormat.setFontItalic(true);
         addHighlightingRule(singleLineCommentFormat, "(//[^\n]*)");
@@ -105,27 +104,8 @@ void C_Highlighter::readTokens() {
         tagsMutex.unlock();
 }
 
-QList<QString> C_Highlighter::detectUserDefinedTypes() {
-        //yellow
-        return {};
-}
-
-// static bool is_std_type(const QString &token) {
-//         const QString types[] = {
-//                 "int", "char", "bool", "float", "double", "long", "short", "auto", "signed", "unsigned"
-//         };
-//
-//         for (int i = 0; i < 10; ++i) {
-//                 if (token.startsWith(types[i])) {
-//                         return true;
-//                 }
-//         }
-//
-//         return false;
-// }
-
-QList<QString> C_Highlighter::detectGlobalIdentifiers() {
-        QList<QString> globalIdentifiers;
+QList<QString> C_Highlighter::detect(const QString &type) {
+        QList<QString> detectedTokens;
 
         tagsMutex.lock();
         auto currentTags = tags;
@@ -139,53 +119,48 @@ QList<QString> C_Highlighter::detectGlobalIdentifiers() {
                         continue;
                 }
 
-                if (line.at(1) == "variable") {
-                        globalIdentifiers.push_back(line.at(0));
+                if (line.at(1) == type) {
+                        detectedTokens.push_back(line.at(0));
                 }
         }
 
 
-        return globalIdentifiers;
+        return detectedTokens;
+}
+
+void C_Highlighter::addRules(const QList<QString> &newRules,
+                             QList<HighlightingRule> &dst,
+                             const QTextCharFormat &format
+) {
+        dst.clear();
+
+        for (const auto &rule: newRules) {
+                dst.push_back({
+                        QRegularExpression("(?<![a-zA-Z0-9_])" + rule + "(?![a-zA-Z0-9_])"),
+                        format
+                });
+        }
 }
 
 void C_Highlighter::highlightOther(const QString &text) {
         readTokens();
 
-        // QFuture<QList<QString>> typesFuture = QtConcurrent::run([this, text] {
-        //         return detectUserDefinedTypes(text);
-        // });
-        // QFutureWatcher<QList<QString>> *typesWatcher = new QFutureWatcher<QList<QString>>();
-        //
-        // connect(typesWatcher, &QFutureWatcher<QList<QString>>::finished, [=] {
-        //         qDebug() << "finished";
-        // });
-
-        QFuture<QList<QString> > globalsFuture = QtConcurrent::run([this, text] {
-                return detectGlobalIdentifiers();
+        QFuture<QList<QString> > globalsFuture = QtConcurrent::run([this] {
+                return detect("variable");
         });
-
         globalsFuture.then([&](const QFuture<QList<QString> > &f) {
                 try {
                         auto res = f.result<>();
                         if (!res.isEmpty()) {
-                                rulesMutex.lock();
-
-                                globalIdentifiersRules.clear();
-
                                 QTextCharFormat globalsFormat;
                                 globalsFormat.setForeground(OneDarkTheme::red);
 
-                                for (const auto &identifier: res) {
-                                        globalIdentifiersRules.push_back({
-                                                QRegularExpression("(?<![a-zA-Z0-9_])" + identifier + "(?![a-zA-Z0-9_])"),
-                                                globalsFormat
-                                        });
-                                }
-
-                                rulesMutex.unlock();
+                                globalIdentifiersRulesMutex.lock();
+                                addRules(res, globalIdentifiersRules, globalsFormat);
+                                globalIdentifiersRulesMutex.unlock();
                         }
                 } catch (QException &e) {
-                        qDebug() << "[!]";
+                        qDebug() << "[!] Unexpected error occured while coloring global identifiers";
                 }
         });
 }
@@ -196,22 +171,23 @@ void C_Highlighter::highlightBlock(const QString &text) {
                 return;
         }
 
-        QRegularExpressionMatchIterator matchIterator = functionRule.pattern.globalMatch(text);
-        while (matchIterator.hasNext()) {
-                QRegularExpressionMatch match = matchIterator.next();
-                setFormat(match.capturedStart(), match.capturedLength() - 1, functionRule.format);
+        if (!fileName.isEmpty()) {
+                QFuture<void> highlightOtherFuture = QtConcurrent::run([this, text] {
+                        static int counter = 0;
+                        qDebug() << counter++;
+                        highlightOther(text);
+
+                        // QMetaObject::invokeMethod(this, [this]() {
+                        //         this->rehighlight();
+                        // }, Qt::QueuedConnection);
+                });
         }
 
+        globalIdentifiersRulesMutex.lock();
+        matchRules(globalIdentifiersRules, text);
+        globalIdentifiersRulesMutex.unlock();
+
+        // matchRules(userDefinedTypesRules, text);
 
         Highlighter::highlightBlock(text);
-
-
-        QFuture<void> highlightOtherFuture = QtConcurrent::run([this, text] {
-                highlightOther(text);
-        });
-
-        rulesMutex.lock();
-        matchRules(globalIdentifiersRules, text);
-        matchRules(userDefinedTypesRules, text);
-        rulesMutex.unlock();
 }
