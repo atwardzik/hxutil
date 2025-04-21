@@ -89,6 +89,8 @@ class C_Highlighter final : public Highlighter {
         QMutex tagsMutex;
         QStringList tags;
 
+        QTimer *debounceTimer;
+
         void setupCodeHighlights() override;
 
         void readTokens();
@@ -97,7 +99,7 @@ class C_Highlighter final : public Highlighter {
 
         void addRules(const QList<QString> &newRules, QList<HighlightingRule> &dst, const QTextCharFormat &format);
 
-        void highlightOther(const QString &text);
+        void updateIdentifierHighlights();
 
         void highlightBlock(const QString &text) override;
 

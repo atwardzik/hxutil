@@ -17,6 +17,18 @@
 
 C_Highlighter::C_Highlighter(QTextDocument *parent, QString filename) : Highlighter(parent, filename) {
         setupCodeHighlights();
+
+        updateIdentifierHighlights();
+
+        debounceTimer = new QTimer(this);
+        debounceTimer->setSingleShot(true);
+        debounceTimer->setInterval(400);
+
+        connect(debounceTimer, &QTimer::timeout, this, &C_Highlighter::updateIdentifierHighlights);
+
+        connect(this->document(), &QTextDocument::contentsChanged, this, [this] {
+                debounceTimer->start();
+        });
 }
 
 void C_Highlighter::setupCodeHighlights() {
@@ -95,7 +107,7 @@ void C_Highlighter::readTokens() {
         getDependencies.waitForFinished();
 
         QString output = getDependencies.readAllStandardOutput();
-        output += getDependencies.readAllStandardError();
+        // output += getDependencies.readAllStandardError();
 
 
         tagsMutex.lock();
@@ -142,7 +154,11 @@ void C_Highlighter::addRules(const QList<QString> &newRules,
         }
 }
 
-void C_Highlighter::highlightOther(const QString &text) {
+void C_Highlighter::updateIdentifierHighlights() {
+        if (fileName.isEmpty()) {
+                return;
+        }
+
         readTokens();
 
         QFuture<QList<QString> > globalsFuture = QtConcurrent::run([this] {
@@ -158,6 +174,10 @@ void C_Highlighter::highlightOther(const QString &text) {
                                 globalIdentifiersRulesMutex.lock();
                                 addRules(res, globalIdentifiersRules, globalsFormat);
                                 globalIdentifiersRulesMutex.unlock();
+
+                                QMetaObject::invokeMethod(this, [this]() {
+                                        this->rehighlight();
+                                }, Qt::QueuedConnection);
                         }
                 } catch (QException &e) {
                         qDebug() << "[!] Unexpected error occured while coloring global identifiers";
@@ -171,23 +191,10 @@ void C_Highlighter::highlightBlock(const QString &text) {
                 return;
         }
 
-        if (!fileName.isEmpty()) {
-                QFuture<void> highlightOtherFuture = QtConcurrent::run([this, text] {
-                        static int counter = 0;
-                        qDebug() << counter++;
-                        highlightOther(text);
-
-                        // QMetaObject::invokeMethod(this, [this]() {
-                        //         this->rehighlight();
-                        // }, Qt::QueuedConnection);
-                });
-        }
-
+        // matchRules(userDefinedTypesRules, text);
         globalIdentifiersRulesMutex.lock();
         matchRules(globalIdentifiersRules, text);
         globalIdentifiersRulesMutex.unlock();
-
-        // matchRules(userDefinedTypesRules, text);
 
         Highlighter::highlightBlock(text);
 }
