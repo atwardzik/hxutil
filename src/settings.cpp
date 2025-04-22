@@ -12,40 +12,6 @@ Settings::Settings(QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
         ui->stackedWidget->removeWidget(ui->page);
         ui->stackedWidget->removeWidget(ui->page_2);
 
-        QWidget *firstPageWidget = new QWidget();
-        QVBoxLayout *firstPageLayout = new QVBoxLayout();
-
-        QLabel *label = new QLabel("Default C compiler path: ");
-        cCompilerPath = new QLineEdit(settings.value("cCompilerPath").toString());
-        firstPageLayout->addWidget(label);
-        firstPageLayout->addWidget(cCompilerPath);
-
-        label = new QLabel("Default ASM compiler path: ");
-        asmCompilerPath = new QLineEdit(settings.value("asmCompilerPath").toString());
-        firstPageLayout->addWidget(label);
-        firstPageLayout->addWidget(asmCompilerPath);
-
-        label = new QLabel("Include path: ");
-        includePath = new QLineEdit(settings.value("IncludePath").toString());
-        firstPageLayout->addWidget(label);
-        firstPageLayout->addWidget(includePath);
-
-        label = new QLabel("ctags path: ");
-        ctagsPath = new QLineEdit(settings.value("ctagsPath").toString());
-        firstPageLayout->addWidget(label);
-        firstPageLayout->addWidget(ctagsPath);
-
-        label = new QLabel("Clang path: ");
-        clangPath = new QLineEdit(settings.value("clangPath").toString());
-        firstPageLayout->addWidget(label);
-        firstPageLayout->addWidget(clangPath);
-
-        label = new QLabel("clang-format path: ");
-        clangFormatPath = new QLineEdit(settings.value("clang-formatPath").toString());
-        firstPageLayout->addWidget(label);
-        firstPageLayout->addWidget(clangFormatPath);
-        firstPageWidget->setLayout(firstPageLayout);
-
 
         QWidget *secondPageWidget = new QWidget();
         QVBoxLayout *secondPageLayout = new QVBoxLayout;
@@ -53,15 +19,14 @@ Settings::Settings(QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
         secondPageLayout->addWidget(restoreToDefaultBtn);
         secondPageWidget->setLayout(secondPageLayout);
 
-        QStackedWidget *stackedWidget = ui->stackedWidget;
-        stackedWidget->addWidget(firstPageWidget);
+        stackedWidget = ui->stackedWidget;
+        listView = ui->listWidget;
+        setupPathsPage();
+        setupStylePage();
         stackedWidget->addWidget(secondPageWidget);
 
 
-        QListWidget *listView = ui->listWidget;
-        auto *first = new QListWidgetItem(tr("Compilers"), listView);
         new QListWidgetItem(tr("Shortcuts"), listView);
-        listView->setCurrentItem(first);
 
         connect(listView, &QListWidget::currentRowChanged, ui->stackedWidget, &QStackedWidget::setCurrentIndex);
         connect(restoreToDefaultBtn, &QPushButton::clicked, this, &Settings::restoreShortcutsToDefault);
@@ -69,6 +34,71 @@ Settings::Settings(QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
 
 Settings::~Settings() {
         delete ui;
+}
+
+void Settings::addLabelAndLineEditToLayout(QLayout *layout, QLineEdit *&path,
+                                           const QString &labelText,
+                                           const QString &setting
+) {
+        QLabel *label = new QLabel(labelText);
+        path = new QLineEdit(settings.value(setting).toString());
+        layout->addWidget(label);
+        layout->addWidget(path);
+}
+
+void Settings::setupPathsPage() {
+        QWidget *widget = new QWidget();
+        QVBoxLayout *layout = new QVBoxLayout();
+
+        addLabelAndLineEditToLayout(layout, cCompilerPath,
+                                    "Default C compiler path: ", "cCompilerPath");
+
+        addLabelAndLineEditToLayout(layout, asmCompilerPath,
+                                    "Default ASM compiler path: ", "asmCompilerPath");
+
+        addLabelAndLineEditToLayout(layout, includePath,
+                                    "Include path: ", "IncludePath");
+
+        addLabelAndLineEditToLayout(layout, ctagsPath,
+                                    "ctags path: ", "ctagsPath");
+
+        addLabelAndLineEditToLayout(layout, clangPath,
+                                    "Clang path: ", "clangPath");
+
+        addLabelAndLineEditToLayout(layout, clangFormatPath,
+                                    "clang-format path: ", "clang-formatPath");
+
+        addLabelAndLineEditToLayout(layout, clangFormatConfigurationFile,
+                                    "clang-format configuration file path: ", "clang-formatConfig");
+
+
+        widget->setLayout(layout);
+        stackedWidget->addWidget(widget);
+
+        auto *first = new QListWidgetItem(tr("Paths"), listView);
+        listView->setCurrentItem(first);
+}
+
+void Settings::setupStylePage() {
+        QWidget *widget = new QWidget();
+        QVBoxLayout *layout = new QVBoxLayout();
+
+        addLabelAndLineEditToLayout(layout, editorFont,
+                                    "Default editor font: ", "EditorFont");
+
+        QHBoxLayout *indentLayout = new QHBoxLayout;
+        QLabel *label = new QLabel("Indentation size in spaces: ");
+        indent = new QSpinBox();
+        indent->setValue(settings.value("IndentSize").toInt());
+        indentLayout->addWidget(label);
+        indentLayout->addWidget(indent);
+
+        layout->addLayout(indentLayout);
+
+        widget->setLayout(layout);
+        stackedWidget->addWidget(widget);
+
+        new QListWidgetItem(tr("Editor"), listView);
 }
 
 void Settings::restoreShortcutsToDefault() {
@@ -106,4 +136,7 @@ void Settings::on_buttonBox_accepted() {
         settings.setValue("ctagsPath", ctagsPath->text());
         settings.setValue("clangPath", clangPath->text());
         settings.setValue("clang-formatPath", clangFormatPath->text());
+        settings.setValue("clang-formatConfig", clangFormatConfigurationFile->text());
+        settings.setValue("EditorFont", editorFont->text());
+        settings.setValue("IndentSize", indent->value());
 }

@@ -22,7 +22,7 @@ C_Highlighter::C_Highlighter(QTextDocument *parent, QString filename) : Highligh
 
         debounceTimer = new QTimer(this);
         debounceTimer->setSingleShot(true);
-        debounceTimer->setInterval(400);
+        debounceTimer->setInterval(500);
 
         connect(debounceTimer, &QTimer::timeout, this, &C_Highlighter::updateIdentifierHighlights);
 
@@ -107,7 +107,6 @@ void C_Highlighter::readTokens() {
         getDependencies.waitForFinished();
 
         QString output = getDependencies.readAllStandardOutput();
-        // output += getDependencies.readAllStandardError();
 
 
         if (!output.isEmpty()) {
@@ -184,6 +183,30 @@ void C_Highlighter::updateIdentifierHighlights() {
                         qDebug() << "[!] Unexpected error occured while coloring global identifiers";
                 }
         });
+
+        QFuture<QList<QString> > globalFunctionsFuture = QtConcurrent::run([this] {
+                auto res = detect("function");
+                return res + detect("prototype");
+        });
+        globalFunctionsFuture.then([&](const QFuture<QList<QString> > &f) {
+                try {
+                        auto res = f.result<>();
+                        if (!res.isEmpty()) {
+                                QTextCharFormat globalsFormat;
+                                globalsFormat.setForeground(OneDarkTheme::blue);
+
+                                functionsMutex.lock();
+                                addRules(res, functionsRules, globalsFormat);
+                                functionsMutex.unlock();
+
+                                QMetaObject::invokeMethod(this, [this]() {
+                                        this->rehighlight();
+                                }, Qt::QueuedConnection);
+                        }
+                } catch (QException &e) {
+                        qDebug() << "[!] Unexpected error occured while coloring global identifiers";
+                }
+        });
 }
 
 
@@ -196,6 +219,11 @@ void C_Highlighter::highlightBlock(const QString &text) {
         globalIdentifiersRulesMutex.lock();
         matchRules(globalIdentifiersRules, text);
         globalIdentifiersRulesMutex.unlock();
+
+        functionsMutex.lock();
+        matchRules(functionsRules, text);
+        functionsMutex.unlock();
+
 
         Highlighter::highlightBlock(text);
 }

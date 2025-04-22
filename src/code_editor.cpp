@@ -6,6 +6,10 @@
 #include "ASMstatic.h"
 #include "settings.h"
 
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
 
 CodeEditor::CodeEditor(QWidget *parent, const QString &fileName, Language language) : QPlainTextEdit(parent) {
         lineNumberArea = new LineNumberArea(this);
@@ -66,9 +70,21 @@ void CodeEditor::formatCode() {
         }
         else if (language == Language::C) {
                 const QString command = getSetting(settings, "clang-formatPath");
+                const fs::path clangFormatConfigFile = getSetting(settings, "clang-formatConfig").toStdString();
 
                 QStringList params;
-                params << this->fileName << "--cursor" << QString::number(this->textCursor().position());
+                params << this->fileName
+                                << "--cursor" << QString::number(this->textCursor().position());
+
+                QString style;
+                if (fs::exists(clangFormatConfigFile)) {
+                        style = QString("--style=file:%1")
+                                        .arg(QString::fromStdString(clangFormatConfigFile));
+                }
+                else {
+                        style = "--style={BasedOnStyle: llvm, IndentWidth: 4}";
+                }
+                params << style;
 
                 QProcess formatter;
                 formatter.start(command, params);

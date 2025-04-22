@@ -8,6 +8,8 @@
 #include <QRadioButton>
 #include <QSettings>
 #include <QPushButton>
+#include <QListWidget>
+#include <QSpinBox>
 
 enum Shortcut {
         // Actions
@@ -82,26 +84,36 @@ public:
         ~Settings();
 
 private slots:
-        // void ok_button_clicked() {
-        //         QString value = compilerPath->text();
-        //
-        //         settings.setValue("compiler_path", value);
-        // }
-
         void on_buttonBox_accepted();
 
 private:
+        void setupPathsPage();
+
+        void setupStylePage();
+
         void restoreShortcutsToDefault();
+
+        void addLabelAndLineEditToLayout(QLayout *layout, QLineEdit *&path,
+                                         const QString &labelText = "", const QString &setting = ""
+        );
 
 private:
         Ui::Settings *ui;
         QSettings settings;
+        QStackedWidget *stackedWidget;
+        QListWidget *listView;
+
         QLineEdit *cCompilerPath;
         QLineEdit *asmCompilerPath;
         QLineEdit *includePath;
         QLineEdit *ctagsPath;
         QLineEdit *clangPath;
         QLineEdit *clangFormatPath;
+        QLineEdit *clangFormatConfigurationFile;
+
+        QLineEdit *editorFont;
+        QSpinBox *fontSize;
+        QSpinBox *indent;
 };
 
 #endif // SETTINGS_H

@@ -55,6 +55,17 @@ protected:
 
         void changeEvent(QEvent *) final;
 
+        void keyPressEvent(QKeyEvent *e) override {
+                if (e->key() == Qt::Key_Tab) {
+                        e = new QKeyEvent(QEvent::KeyPress,
+                                          Qt::Key_Space,
+                                          Qt::KeyboardModifiers(e->nativeModifiers()),
+                                          "    ");
+                }
+
+                QPlainTextEdit::keyPressEvent(e);
+        }
+
 private slots:
         void updateLineNumberAreaWidth(int newBlockCount);
 
