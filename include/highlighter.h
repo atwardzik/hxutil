@@ -67,6 +67,7 @@ public:
 
 // TODO: for now it searches million times through all dependencies, it should be optimized to
 //      search in those files only if they change (QFileSystemWatcher)
+//      then generate ctags for them. Ctags for stdlib should be stored somewhere
 class C_Highlighter final : public Highlighter {
         QTextCharFormat keywordFormat;
         QTextCharFormat preprocessorFormat;

@@ -43,7 +43,7 @@ void ARMv6_ASM_Highlighter::setupCodeHighlights() {
         addHighlightingRule(directiveFormat, R"(\.\S*(\s|$))");
 
         escapeSequenceFormat.setForeground(OneDarkTheme::blue);
-        addHighlightingRule(escapeSequenceFormat, "(\\\\[abefnrtv\\\\\'\"\?])|(%[diuoxXfFeEgGaAcspn%])");
+        addHighlightingRule(escapeSequenceFormat, R"((\\[abefnrtv\\'"?])|(%[diuoxXfFeEgGaAcspn%]))");
 
         singleLineCommentFormat.setForeground(OneDarkTheme::lightGray);
         singleLineCommentFormat.setFontItalic(true);

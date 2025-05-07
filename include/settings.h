@@ -93,7 +93,7 @@ private:
 
         void restoreShortcutsToDefault();
 
-        void addLabelAndLineEditToLayout(QLayout *layout, QLineEdit *&path,
+        void addPathLayout(QLayout *layout, QLineEdit *&path,
                                          const QString &labelText = "", const QString &setting = ""
         );
 

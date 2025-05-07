@@ -96,7 +96,7 @@ void C_Highlighter::readTokens() {
         const QString ctagsPath = getSetting(settings, "ctagsPath");
 
         QString shellCommand = QString(
-                                "%1 -M -I %2 %3 | sed -e 's/[\\\\ ]/\\n/g' | sed -e '/^$/d' -e '/\\.o:[ \\t]*$/d' | %4 -L - --c-kinds=+p --fields=+iaS --extras=+q -x")
+                                R"(%1 -M -I %2 %3 | sed -e 's/[\\ ]/\n/g' | sed -e '/^$/d' -e '/\.o:[ \t]*$/d' | %4 -L - --c-kinds=+p --fields=+iaS --extras=+q -x)")
                         .arg(compilerCommand)
                         .arg(includePath)
                         .arg(fileName)

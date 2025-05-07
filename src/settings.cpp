@@ -1,7 +1,7 @@
 #include "settings.h"
 
-#include <__format/range_default_formatter.h>
-
+#include <filesystem>
+#include <format>
 #include "../ui/ui_settings.h"
 
 Settings::Settings(QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
@@ -36,12 +36,19 @@ Settings::~Settings() {
         delete ui;
 }
 
-void Settings::addLabelAndLineEditToLayout(QLayout *layout, QLineEdit *&path,
-                                           const QString &labelText,
-                                           const QString &setting
+void Settings::addPathLayout(QLayout *layout, QLineEdit *&path,
+                             const QString &labelText,
+                             const QString &setting
 ) {
+        QString currentPath = settings.value(setting).toString();
+        path = new QLineEdit(currentPath);
+
+
         QLabel *label = new QLabel(labelText);
-        path = new QLineEdit(settings.value(setting).toString());
+        if (!std::filesystem::exists(currentPath.toStdString())
+            && system(std::format("which {} > /dev/null 2>&1", currentPath.toStdString()).c_str())) {
+                label->setText(labelText + "<span style='color: red';>(Invalid)</span>");
+        }
         layout->addWidget(label);
         layout->addWidget(path);
 }
@@ -50,26 +57,26 @@ void Settings::setupPathsPage() {
         QWidget *widget = new QWidget();
         QVBoxLayout *layout = new QVBoxLayout();
 
-        addLabelAndLineEditToLayout(layout, cCompilerPath,
-                                    "Default C compiler path: ", "cCompilerPath");
+        addPathLayout(layout, cCompilerPath,
+                      "Default C compiler path: ", "cCompilerPath");
 
-        addLabelAndLineEditToLayout(layout, asmCompilerPath,
-                                    "Default ASM compiler path: ", "asmCompilerPath");
+        addPathLayout(layout, asmCompilerPath,
+                      "Default ASM compiler path: ", "asmCompilerPath");
 
-        addLabelAndLineEditToLayout(layout, includePath,
-                                    "Include path: ", "IncludePath");
+        addPathLayout(layout, includePath,
+                      "Include path: ", "IncludePath");
 
-        addLabelAndLineEditToLayout(layout, ctagsPath,
-                                    "ctags path: ", "ctagsPath");
+        addPathLayout(layout, ctagsPath,
+                      "ctags path: ", "ctagsPath");
 
-        addLabelAndLineEditToLayout(layout, clangPath,
-                                    "Clang path: ", "clangPath");
+        addPathLayout(layout, clangPath,
+                      "Clang path: ", "clangPath");
 
-        addLabelAndLineEditToLayout(layout, clangFormatPath,
-                                    "clang-format path: ", "clang-formatPath");
+        addPathLayout(layout, clangFormatPath,
+                      "clang-format path: ", "clang-formatPath");
 
-        addLabelAndLineEditToLayout(layout, clangFormatConfigurationFile,
-                                    "clang-format configuration file path: ", "clang-formatConfig");
+        addPathLayout(layout, clangFormatConfigurationFile,
+                      "clang-format configuration file path: ", "clang-formatConfig");
 
 
         widget->setLayout(layout);
@@ -83,8 +90,8 @@ void Settings::setupStylePage() {
         QWidget *widget = new QWidget();
         QVBoxLayout *layout = new QVBoxLayout();
 
-        addLabelAndLineEditToLayout(layout, editorFont,
-                                    "Default editor font: ", "EditorFont");
+        addPathLayout(layout, editorFont,
+                      "Default editor font: ", "EditorFont");
 
         QHBoxLayout *indentLayout = new QHBoxLayout;
         QLabel *label = new QLabel("Indentation size in spaces: ");
