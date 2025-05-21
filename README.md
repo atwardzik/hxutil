@@ -1,4 +1,7 @@
 # hxutil
+![Screenshot 2025-05-21 at 9 33 12 PM](https://github.com/user-attachments/assets/ac7f20b6-8e7f-49ee-a1e1-7e959d0074f7)
+
+
 hxutil is a simple IDE best suited for embedded and low level programming. It includes integration with user specified C and Assembly compilers.
 
 Features:
